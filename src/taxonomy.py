@@ -138,6 +138,7 @@ TAXONOMY = {
             r"declared value", r"\binsurance\b", r"extended liability", r"value protection",
         ],
         "Cancellation Fee": [r"cancell?ation fee"],
+        "Customer Service / Resolution Fee": [r"customer solutions?"],
         "Sustainability / Carbon Fee": [
             r"gogreen", r"carbon reduced", r"environmental fee", r"\bco2\b",
         ],
@@ -293,6 +294,9 @@ FOREIGN_PATTERNS = {
         r"opslag",                                      # NL
         r"almacenaj",                                   # ES
     ],
+    "Customer Service / Resolution Fee": [
+        r"klantoplossing",                              # NL: (kosten service) klantoplossing = customer solution service fee
+    ],
     "Pickup Service": [
         r"recogida", r"recolecci[oó]n",                 # ES
     ],
@@ -394,6 +398,9 @@ TFIDF_EXCLUDE = {
     ("Fuel Surcharge", "Chargeback Fuel Surcharge"),
     # Commodity descriptions, not fee names -- see the comment on this subcategory.
     ("Line Haul / Base Transportation", "LTL Freight (Commodity Line)"),
+    # One known label so far; as a two-word reference doc ("customer solution") it
+    # fuzzy-matched "Custody Fee" on the shared "cust". Rules only until it has more.
+    ("Administrative & Service Fees", "Customer Service / Resolution Fee"),
 }
 
 

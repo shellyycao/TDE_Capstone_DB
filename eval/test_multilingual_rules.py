@@ -53,6 +53,7 @@ CASES = [
     ("Uitbetalingskosten", "Disbursement Fee"),
     ("MILIEU BIJDRAGE", "Sustainability / Carbon Fee"),
     ("Opslag kosten", "Package Handling / Storage"),
+    ("Kosten service klantoplossing", "Customer Service / Resolution Fee"),
     ("Vervoer", "General / Mode Not Specified"),
     ("VRACHTKOSTEN", "General / Mode Not Specified"),
     ("Retourzendingen TB Standard", "International / Export / Import Freight"),
