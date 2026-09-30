@@ -20,11 +20,6 @@ own sandbox schema instead:
 The first run creates the schema plus its own charge_mapping table and
 charge_categorized / charge_review views (from the migration SQL, pointed at
 that schema). staging.charge is only ever read.
-
-Fallback for labels the rules miss (--fallback):
-    tfidf      character n-gram TF-IDF against the taxonomy patterns (default)
-    embedding  experimental: multilingual sentence embeddings, k-nearest
-               rule-classified labels (src/embedding_fallback.py). Sandbox only.
 """
 
 import argparse
@@ -40,27 +35,21 @@ from sqlalchemy import create_engine, text
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from taxonomy import CATCH_ALL, EXCLUDED, FALLBACK_RULES, TAXONOMY, TFIDF_EXCLUDE, rule_classify_row  # noqa: E402
-from tfidf_fallback import TfidfFallback  # noqa: E402
+from taxonomy import CATCH_ALL, TAXONOMY, normalize, rule_classify_row  # noqa: E402
+from tfidf_fallback import SIMILARITY_THRESHOLD, TfidfFallback  # noqa: E402
 
 MIGRATION_SQL = REPO_ROOT / "supabase" / "migrations" / "20260929000000_analytics_charge_mapping.sql"
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument("--schema", default="analytics",
                     help="schema to write charge_mapping into (default: analytics, the shared one)")
-parser.add_argument("--fallback", choices=["tfidf", "embedding"], default="tfidf",
-                    help="how to classify labels the rules miss (default: tfidf)")
-parser.add_argument("--threshold", type=float,
-                    help="minimum similarity to accept a fallback match "
-                         "(default: 0.35 for tfidf, EMBEDDING_THRESHOLD for embedding)")
+parser.add_argument("--threshold", type=float, default=SIMILARITY_THRESHOLD,
+                    help=f"minimum TF-IDF similarity to accept a fallback match (default: {SIMILARITY_THRESHOLD})")
 args = parser.parse_args()
 SCHEMA = args.schema
-FALLBACK = args.fallback
 # The schema name is interpolated into SQL, so only allow plain identifiers.
 if not re.fullmatch(r"[a-z_][a-z0-9_]*", SCHEMA):
     sys.exit(f"--schema must be a lowercase identifier like sandbox_yourname, got {SCHEMA!r}")
-if FALLBACK != "tfidf" and SCHEMA == "analytics":
-    sys.exit("--fallback embedding is experimental; write it to a sandbox with --schema sandbox_yourname")
 
 load_dotenv(REPO_ROOT / ".env")
 DB_URL = os.environ.get("SUPABASE_DB_URL")
@@ -116,57 +105,22 @@ matched_rows = unique_labels.loc[unique_labels["Major Category"].notna(), "row_c
 print(f"Rule-based coverage: {matched_rows / unique_labels['row_count'].sum() * 100:.1f}% of rows")
 
 # ---------------------------------------------------------------------------
-# Fallback for labels the rules missed
+# TF-IDF fallback for labels the rules missed (src/tfidf_fallback.py)
 # ---------------------------------------------------------------------------
-EMBEDDING_THRESHOLD = 0.75  # calibrated on this data: see eval/fallback_eval_set.csv
-
-
-def normalize(text):
-    if pd.isna(text):
-        return ""
-    return str(text).lower().strip()
-
-
 def label_text(row):
     return (normalize(row["Charge Type"]) + " " + normalize(row["Charge Description"])).strip()
 
 
 unmatched = unique_labels["Major Category"].isna()
 todo = [idx for idx in unique_labels.index[unmatched] if label_text(unique_labels.loc[idx])]
-if FALLBACK == "tfidf":
-    tfidf = TfidfFallback() if args.threshold is None else TfidfFallback(args.threshold)
-    fallback_results = dict(zip(todo, tfidf.classify([label_text(unique_labels.loc[i]) for i in todo])))
-else:
-    from embedding_fallback import EmbeddingFallback
-
-    # References: every label the rules classified (same exclusions as the TF-IDF
-    # corpus), plus the subcategory name itself so classes without examples can win.
-    # Labels carrying a FALLBACK_RULES prefix are left out: whether their class came
-    # from the prefix ("Retourzendingen Surge Fee - Commercieel" -> Returns) or from
-    # the charge itself, the prefix words dominate the embedding, so as neighbours
-    # they pull plain "Surge Fee - Commercieel" into Returns.
-    ruled = unique_labels[~unmatched]
-    references = {
-        (label_text(r), (r["Major Category"], r["Subcategory"]))
-        for _, r in ruled.iterrows()
-        if (r["Major Category"], r["Subcategory"]) not in TFIDF_EXCLUDE | {EXCLUDED}
-        and not any(re.search(pat, label_text(r)) for pat, _ in FALLBACK_RULES)
-    }
-    references |= {
-        (f"{major}: {sub}", (major, sub))
-        for major, subcats in TAXONOMY.items() for sub in subcats
-        if (major, sub) not in TFIDF_EXCLUDE
-    }
-    print(f"Embedding {len(todo):,} unmatched labels against {len(references):,} references...")
-    embedder = EmbeddingFallback(sorted(references), threshold=EMBEDDING_THRESHOLD if args.threshold is None else args.threshold)
-    fallback_results = dict(zip(todo, embedder.classify([label_text(unique_labels.loc[i]) for i in todo])))
+fallback_results = dict(zip(todo, TfidfFallback(args.threshold).classify([label_text(unique_labels.loc[i]) for i in todo])))
 
 for idx, result in fallback_results.items():
     if result:
         (major, sub), sim = result
         unique_labels.loc[idx, "Major Category"] = major
         unique_labels.loc[idx, "Subcategory"] = sub
-        unique_labels.loc[idx, "Method"] = f"{FALLBACK}_fallback"
+        unique_labels.loc[idx, "Method"] = "tfidf_fallback"
         unique_labels.loc[idx, "similarity"] = sim
 
 unique_labels["Major Category"] = unique_labels["Major Category"].fillna(CATCH_ALL[0])
@@ -174,7 +128,7 @@ unique_labels["Subcategory"] = unique_labels["Subcategory"].fillna(CATCH_ALL[1])
 unique_labels["Method"] = unique_labels["Method"].fillna("none")
 
 final_coverage = 1 - unique_labels.loc[unique_labels["Major Category"] == CATCH_ALL[0], "row_count"].sum() / unique_labels["row_count"].sum()
-print(f"Final coverage after {FALLBACK} fallback: {final_coverage * 100:.1f}% of rows categorized")
+print(f"Final coverage after TF-IDF fallback: {final_coverage * 100:.1f}% of rows categorized")
 print(unique_labels["Method"].value_counts())
 
 # ---------------------------------------------------------------------------

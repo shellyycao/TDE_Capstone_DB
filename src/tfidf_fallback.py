@@ -3,7 +3,7 @@
 Character n-gram (char_wb, 3-5) TF-IDF: each subcategory's regex patterns, with the
 regex syntax stripped, are joined into one reference document, and a label goes to
 the subcategory whose document it is most cosine-similar to -- if that similarity
-clears the threshold. Used by jobs/charge_type.py (the default --fallback) and by
+clears the threshold. Used by jobs/charge_type.py and by
 eval/evaluate_fallback.py, so both always score the same model.
 """
 
