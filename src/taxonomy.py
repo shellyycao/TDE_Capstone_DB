@@ -23,24 +23,52 @@ import re
 
 import pandas as pd
 
+# English patterns. These also build the TF-IDF fallback's reference documents (see
+# tfidf_fallback.py), so a generic word here pulls unrelated labels into its subcategory.
+# Dutch and Spanish patterns live in FOREIGN_PATTERNS below.
 TAXONOMY = {
     "Fuel Surcharge": {
         "Fuel Surcharge Correction": [r"correction.*fuel", r"fuel.*correction"],
         "Chargeback Fuel Surcharge": [r"chargeback.*fuel"],
         "International Fuel Surcharge": [r"worldease.*fuel", r"international.*fuel"],
-        "Domestic Fuel Surcharge": [r"\bfuel surcharge\b", r"\bfuel\b", r"brandstof", r"\bfsc\b"],
+        "Domestic Fuel Surcharge": [
+            r"\bfuel surcharge\b", r"\bfuel\b", r"\bfsc\b",
+        ],
     },
     "Accessorial / Delivery Surcharge": {
-        "Delivery Area Surcharge (DAS)": [r"\bdas\b", r"delivery area surcharge", r"afgel(egen)?\.? gebied", r"limited access", r"beyond area", r"extended area", r"metro charge", r"\barbitrary\b", r"high cost delivery", r"trade show", r"constr(uction|/utility)? site"],
-        "Residential Delivery/Surcharge": [r"residenti(al|eel)"],
-        "Signature Required": [r"signature"],
-        "Additional Handling": [r"add'?l handling", r"additional handling", r"handling.*dimension", r"\bahs\b", r"lift ?gate", r"laadklep", r"assistentie", r"driver assist", r"inside delivery", r"protect from freez", r"temp\.? controlled", r"excess l(e)?n(gth)?\b", r"non.?conveyable", r"extreme length", r"over ?dimension", r"\boversize\b", r"over ?(weight|length)\b", r"over dim\b", r"groot pakket", r"afhandeling", r"dangerous goods", r"\bhazardous\b"],
-        "Saturday / After Hours / Holiday": [r"saturday", r"after hours", r"\bholiday\b"],
-        "Demand / Peak Surcharge": [r"demand surcharge", r"surge emergency", r"\bpeak\b", r"surge fee", r"wintertoeslag"],
-        "Wait Time / Mileage / Toll": [r"wait time", r"additional miles", r"\btoll(ing)?\b", r"detention", r"layover", r"stop ?off", r"time on.?site", r"\b(extra|additional|add) stop\b"],
-        "Address Correction": [r"address correction", r"adrescorrectie"],
+        "Delivery Area Surcharge (DAS)": [
+            r"\bdas\b", r"delivery area surcharge", r"limited access", r"beyond area", r"extended area",
+            r"metro charge", r"\barbitrary\b", r"high cost delivery", r"trade show", r"constr(uction|/utility)? site",
+        ],
+        "Residential Delivery/Surcharge": [
+            r"residential",
+        ],
+        "Signature Required": [
+            r"signature",
+        ],
+        "Additional Handling": [
+            r"add'?l handling", r"additional handling", r"handling.*dimension", r"\bahs\b", r"additional piece",
+            r"lift ?gate", r"driver assist", r"inside delivery", r"protect from freez", r"temp\.? controlled",
+            r"excess l(e)?n(gth)?\b", r"non.?conveyable", r"extreme length", r"over ?dimension", r"\boversize\b",
+            r"over ?(weight|length)\b", r"over dim\b", r"\bover max", r"dangerous goods", r"\bhazardous\b",
+        ],
+        "Saturday / After Hours / Holiday": [
+            r"saturday", r"\bweekend\b", r"after hours", r"\bholiday\b",
+        ],
+        "Demand / Peak Surcharge": [
+            r"demand surcharge", r"surge emergency", r"\bpeak\b", r"surge fee",
+        ],
+        "Wait Time / Mileage / Toll": [
+            r"wait time", r"additional miles", r"\btoll(ing)?\b", r"detention", r"layover", r"stop ?off",
+            r"time on.?site", r"\b(extra|additional|add) stop\b",
+        ],
+        "Address Correction": [
+            r"address correction",
+        ],
         "Appointment / Notification": [r"\bappointment\b", r"hour notice", r"\bnotification\b"],
-        "Delivery Attempt / Reconsignment": [r"\battempt(ed)?\b", r"reconsign", r"redelivery"],
+        "Delivery Attempt / Reconsignment": [
+            r"\battempt(ed)?\b", r"reconsign", r"redelivery",
+        ],
         "Regulatory / Compliance Surcharge": [r"compliance", r"regulatory"],
         "Security Surcharge": [r"security surcharge", r"\bscreening\b", r"x-ray"],
         # Symmetric counterpart to "Residential Delivery/Surcharge". Deliberately narrow
@@ -54,17 +82,33 @@ TAXONOMY = {
     "Discounts": {
         "Earned Discount": [r"earned discount", r"performance pricing"],
         "Grace Discount": [r"grace discount"],
-        "General Discount": [r"\bdiscount\b"],
+        "General Discount": [
+            r"\bdiscount\b",
+        ],
     },
     "Credits": {
-        "Credit From Carrier": [r"credit from carrier"],
+        "Credit From Carrier": [
+            r"credit from carrier", r"credit memo", r"billing credit",
+        ],
     },
     "Taxes & Customs": {
-        "VAT": [r"\bvat\b", r"\bbtw\b", r"\biva\b"],
+        "VAT": [
+            r"\bvat\b",
+        ],
         "GST / HST": [r"\bgst\b", r"\bhst\b"],
-        "Duty & Import Tax": [r"dut(y|ies)", r"import fee", r"import tax", r"invoerrecht"],
-        "Customs / Brokerage": [r"customs?", r"inbound processing", r"merchandise processing", r"other gov(ernmen)?t\.? (agency )?fees?", r"\bisf\b", r"\ba?ams fees?\b", r"\bacms\b", r"\bfda\b", r"health canada", r"inklaring", r"border crossing", r"\bpga\b", r"entry prep", r"tariefposten", r"aduana", r"entry fee", r"multiline entry", r"\bbroker\b", r"\bcci\b", r"\baes\b", r"\b[ao]xp declaration", r"\bbonded\b", r"brokerage", r"export declaration", r"international processing", r"internationale verwerkingskosten", r"\beei\b", r"commercial invoice", r"entry line"],
-        "Sales / General Tax": [r"\btax(es)?\b", r"federal ?tax", r"provincial ?tax"],
+        "Duty & Import Tax": [
+            r"dut(y|ies)", r"import fee", r"import tax",
+        ],
+        "Customs / Brokerage": [
+            r"customs?", r"inbound processing", r"merchandise processing", r"other gov(ernmen)?t\.? (agency )?fees?",
+            r"\bisf\b", r"\ba?ams fees?\b", r"\bacms\b", r"\bfda\b", r"health canada", r"border crossing", r"\bpga\b",
+            r"entry prep", r"entry fee", r"multiline entry", r"\bbroker\b", r"\bcci\b", r"\baes\b",
+            r"\b[ao]xp declaration", r"\bbonded\b", r"brokerage", r"export declaration", r"international processing",
+            r"\beei\b", r"commercial invoice", r"entry line",
+        ],
+        "Sales / General Tax": [
+            r"\btax(es)?\b", r"federal ?tax", r"provincial ?tax",
+        ],
     },
     "Administrative & Service Fees": {
         # Always caught earlier by PRIORITY_OVERRIDES; kept here too so it still shows up
@@ -73,17 +117,36 @@ TAXONOMY = {
         # Row-level check: 99.1% of the rows matching these patterns are POSITIVE charges
         # (e.g. "Shipping Charge Correction Ground" is 4,376 positive vs. 6 negative rows)
         # -- this is billing/accounting corrections that add to the invoice, not a price
-        # concession (Discounts) or a carrier-issued refund (Credits).
-        "Billing Adjustment / Correction": [r"billing adjustment", r"shipping charge correction", r"verzendcorrectiekosten", r"\brebill\b", r"aanpassing", r"reweigh", r"weight changed", r"\binspection\b"],
-        "Disbursement Fee": [r"disbursement", r"uitbetaling"],
+        # concession (Discounts) or a carrier-issued refund (Credits). The generic
+        # `correct(ion|ed)` sits here, after Fuel Surcharge Correction and Address
+        # Correction have had their turn; without it the TF-IDF fallback sent every
+        # other "correction" label to Fuel Surcharge Correction.
+        "Billing Adjustment / Correction": [
+            r"billing adjustment", r"shipping charge correction", r"\brebill\b", r"reweigh", r"weight changed",
+            r"\binspection\b", r"\bcorrect(ion|ed)\b",
+        ],
+        "Disbursement Fee": [
+            r"disbursement", r"\badvance(s|ment)?\b",      # "advance at destination" = duties advanced on the payer's behalf
+        ],
         "Third Party Billing": [r"third party billing"],
-        "Document Fee": [r"document fee", r"documents? preparation", r"air ?way ?bill", r"\bawb\b", r"manifest fee", r"admin docs", r"paperwork", r"bill of ?lading", r"delivery order", r"\bd/o fee\b"],
-        "Returns / Print Label Fee": [r"print.*label", r"returns print label", r"return to sender"],
-        "Declared Value / Insurance": [r"declared value", r"\binsurance\b", r"extended liability", r"value protection"],
+        "Document Fee": [
+            r"document fee", r"documents? preparation", r"air ?way ?bill", r"\bawb\b", r"manifest fee", r"admin docs",
+            r"paperwork", r"bill of ?lading", r"delivery order", r"\bd/o fee\b",
+        ],
+        "Returns / Print Label Fee": [r"print.*label", r"returns print label", r"return to sender", r"undeliverable return"],
+        "Declared Value / Insurance": [
+            r"declared value", r"\binsurance\b", r"extended liability", r"value protection",
+        ],
         "Cancellation Fee": [r"cancell?ation fee"],
-        "Sustainability / Carbon Fee": [r"gogreen", r"carbon reduced", r"environmental fee", r"milieu"],
-        "Package Handling / Storage": [r"package handling", r"warehouse storage", r"\bstorage\b", r"palleti[sz]", r"opslag"],
-        "Pickup Service": [r"pick ?up"],
+        "Sustainability / Carbon Fee": [
+            r"gogreen", r"carbon reduced", r"environmental fee", r"\bco2\b",
+        ],
+        "Package Handling / Storage": [
+            r"package handling", r"warehouse storage", r"\bstorage\b", r"palleti[sz]",
+        ],
+        "Pickup Service": [
+            r"pick ?up",
+        ],
     },
     # Ground, Air, International, and Ocean Freight are *mode* subcategories -- the raw
     # label told us which mode. "General / Mode Not Specified" is NOT a fifth mode; it's
@@ -97,9 +160,18 @@ TAXONOMY = {
         # transfer" (not "airport transfer") also catches an OCR-mangled variant seen in
         # the raw data: "Al RPORT TRANSFER E".
         "Air Freight": [r"next day", r"2nd day", r"two day", r"3 day", r"third day", r"second day", r"\bair ?freight\b", r"rport transfer", r"airport fees?"],
-        "International / Export / Import Freight": [r"worldwide express", r"ww express", r"\bexport\b", r"\bimport\b", r"world ?ease", r"international freight", r"\bww (saver|expedited)\b", r"worldwide (saver|expedited)", r"\bpremium \d", r"standard to canada"],
+        # UPS international service names: WW = Worldwide, TB = TransBorder.
+        "International / Export / Import Freight": [
+            r"worldwide express", r"ww express", r"\bexport\b", r"\bimport\b", r"world ?ease", r"international freight",
+            r"\bww (saver|expedited|standard)\b", r"worldwide (saver|expedited|standard)",
+            r"\btb (standard|express)\b", r"\bpremium \d", r"standard to canada",
+        ],
         "Ocean Freight": [r"ocean"],
-        "General / Mode Not Specified": [r"line ?haul", r"transportation charge", r"\bbase\b", r"\bfreight\b", r"frt freight", r"\bvracht", r"all in rate", r"\bvervoer\b", r"deficit (wgt|weight)", r"\bas weight\b", r"minimum charg", r"transportation coord"],
+        "General / Mode Not Specified": [
+            r"line ?haul", r"transportation charge", r"\bbase\b", r"\bfreight\b", r"frt freight", r"all in rate",
+            r"deficit (wgt|weight)", r"\bas weight\b", r"minimum charg", r"transportation coord",
+            r"\bdom\.? express\b",                         # UPS domestic Express (Saver) -- mode not stated
+        ],
         # Not a fee label at all: LTL freight bills put the *commodity description* of the
         # shipped goods ("FILM OR SHEETING NOI NMFC 156830-07 65", "Faucets; Bibcocks; Gate
         # Valves or", "PALLET STEEL EXPANSION TANK ... 150.0") on the line that carries the
@@ -123,6 +195,111 @@ TAXONOMY = {
             r"\bequipment\b", r"electronic parts", r"\bcartons\b", r"\bhardware\b", r"\bcable\b", r"\bheating element\b", r"\bincubator\b", r"pressu?s?re chamber",
         ],
     },
+}
+
+
+# Dutch (NL -- mostly UPS Netherlands invoices) and Spanish (ES) patterns, keyed by
+# subcategory. rule_classify_row tries them right after that subcategory's English
+# patterns, so they follow the same priority order. They are kept out of TAXONOMY on
+# purpose: they never help fuzzy-match an English label, and adding them to a
+# subcategory's TF-IDF reference document dilutes its English terms -- putting them
+# there pushed correct matches like "WAITING TIME" and "Addl. Handling weight" below
+# the threshold. Patterns are specific compounds ("brandstof", "vraagtoeslag",
+# "gastos suplidos") rather than generic words like "kosten" / "gastos" ("costs").
+FOREIGN_PATTERNS = {
+    "Domestic Fuel Surcharge": [
+        r"brandstof",                                   # NL: brandstof(toeslag) = fuel (surcharge)
+        r"combustible",                                 # ES: recargo por combustible
+    ],
+    "Delivery Area Surcharge (DAS)": [
+        r"afgel(egen)?\.? gebied",                      # NL: (toeslag) afgelegen gebied = remote area
+        r"zona (remota|extendida)",                     # ES: remote / extended zone
+    ],
+    "Residential Delivery/Surcharge": [
+        r"residentieel",                                # NL
+        r"residencial",                                 # ES
+    ],
+    "Signature Required": [
+        r"handtekening",                                # NL
+    ],
+    "Additional Handling": [
+        r"afhandel",                                    # NL: (extra) afhandeling(skosten) = (additional) handling
+        r"groot pakket", r"afmeting",                   # NL: large package; (maximale) afmeting = (max) dimensions
+        r"laadklep", r"assistentie",                    # NL: tail lift; (driver) assistance
+        r"manejo especial",                             # ES: special handling
+    ],
+    "Saturday / After Hours / Holiday": [
+        r"zaterdag",                                    # NL
+        r"s[aá]bado",                                   # ES
+    ],
+    "Demand / Peak Surcharge": [
+        r"vraagtoeslag", r"piek ?(toeslag|seizoen)", r"wintertoeslag", r"nood ?toeslag",  # NL: demand / peak / winter / emergency surcharge
+        r"temporada alta",                              # ES: peak season
+    ],
+    "Wait Time / Mileage / Toll": [
+        r"wachttijd", r"\btol\b",                       # NL: waiting time; toll
+        r"tiempo de espera", r"\bpeajes?\b",            # ES: waiting time; toll
+    ],
+    "Address Correction": [
+        r"adrescorrectie",                              # NL
+        r"correcci[oó]n de direcci[oó]n",               # ES
+    ],
+    "Delivery Attempt / Reconsignment": [
+        r"bezorgpoging",                                # NL: delivery attempt
+    ],
+    "General Discount": [
+        r"korting",                                     # NL
+        r"descuento",                                   # ES
+    ],
+    "Credit From Carrier": [
+        r"credit ?nota", r"creditering",                # NL
+        r"nota de cr[eé]dito",                          # ES
+    ],
+    "VAT": [
+        r"\bbtw\b", r"omzetbelasting",                  # NL
+        r"\biva\b", r"\bigv\b",                         # ES (IGV = Peru)
+    ],
+    "Duty & Import Tax": [
+        r"invoerrecht", r"accijns",                     # NL: import duty; excise
+        r"arancel", r"derechos (de )?(importaci|aduana)",  # ES: tariff; import duties
+    ],
+    "Customs / Brokerage": [
+        r"inklaring", r"douane", r"tariefposten", r"internationale verwerkingskosten",  # NL: clearance; customs; tariff lines
+        r"aduana", r"despacho",                         # ES: customs; clearance
+    ],
+    "Sales / General Tax": [
+        r"belasting",                                   # NL
+        r"\bimpuestos?\b",                              # ES
+    ],
+    "Billing Adjustment / Correction": [
+        r"verzendcorrectiekosten", r"aanpassing",       # NL: shipping correction costs; adjustment
+    ],
+    "Disbursement Fee": [
+        r"uitbetaling", r"voorschot",                   # NL
+        r"gastos suplidos",                             # ES
+    ],
+    "Document Fee": [
+        r"documentkosten",                              # NL
+        r"documentaci[oó]n",                            # ES
+    ],
+    "Declared Value / Insurance": [
+        r"verzeker", r"aangegeven waarde",              # NL: insurance; declared value
+        r"\bseguro\b",                                  # ES
+    ],
+    "Sustainability / Carbon Fee": [
+        r"milieu", r"klimaat",                          # NL: environmental; climate
+    ],
+    "Package Handling / Storage": [
+        r"opslag",                                      # NL
+        r"almacenaj",                                   # ES
+    ],
+    "Pickup Service": [
+        r"recogida", r"recolecci[oó]n",                 # ES
+    ],
+    "General / Mode Not Specified": [
+        r"\bvracht", r"\bvervoer\b",                    # NL: freight; transport
+        r"\bflete\b", r"\btransporte\b",                # ES
+    ],
 }
 
 CATCH_ALL = ("Other / Uncategorized", "Unclassified")
@@ -187,11 +364,11 @@ PRIORITY_OVERRIDES = [
 # Residential Surcharge" stays Residential); the prefix only decides the category when
 # the rest of the label is something the taxonomy doesn't know ("Returns Pre-Release
 # Notification Surcharge", "Not Previously Billed Missing PLD Fee").
-# "Retourzendingen" is Dutch for returns. Kept out of TAXONOMY so these very common
+# "Retourzendingen" (NL) / "devoluciones" (ES) mean returns. Kept out of TAXONOMY so these very common
 # prefixes never enter the TF-IDF corpus either.
 FALLBACK_RULES = [
     (r"^not previously billed\b", ("Administrative & Service Fees", "Billing Adjustment / Correction")),
-    (r"^(retourzendingen|returns)\b", ("Administrative & Service Fees", "Returns / Print Label Fee")),
+    (r"^(retourzendingen|returns|devoluci[oó]n(es)?)\b", ("Administrative & Service Fees", "Returns / Print Label Fee")),
 ]
 
 # Subcategories excluded from the TF-IDF fallback reference corpus (see ref_docs
@@ -238,7 +415,7 @@ def rule_classify_row(charge_type, charge_desc):
             return result
     for major, subcats in TAXONOMY.items():
         for sub, patterns in subcats.items():
-            for pat in patterns:
+            for pat in patterns + FOREIGN_PATTERNS.get(sub, []):
                 if re.search(pat, t):
                     return (major, sub)
     for pat, result in FALLBACK_RULES:

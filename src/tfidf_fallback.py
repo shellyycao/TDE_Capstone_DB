@@ -7,6 +7,8 @@ clears the threshold. Used by jobs/charge_type.py and by
 eval/evaluate_fallback.py, so both always score the same model.
 """
 
+import re
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -18,6 +20,17 @@ from taxonomy import TAXONOMY, TFIDF_EXCLUDE
 # instead of landing in a wrong category.
 SIMILARITY_THRESHOLD = 0.35
 
+# Words nearly every charge label contains. They say nothing about the category, but
+# left in they make short reference documents win: "fuel surcharge fuel fsc" pulled
+# "Early Surcharge", "JFK Surcharge", "DG Surcharge" into Fuel Surcharge on the shared
+# word alone. Stripped from both the reference documents and the labels; on the eval
+# set this categorized more labels at the same precision.
+GENERIC_WORDS = re.compile(r"\b(sur)?charges?\b|\bfees?\b|\bcosts?\b")
+
+
+def _strip_generic(text):
+    return GENERIC_WORDS.sub(" ", text)
+
 
 class TfidfFallback:
     def __init__(self, threshold=SIMILARITY_THRESHOLD):
@@ -27,8 +40,9 @@ class TfidfFallback:
             for sub, patterns in subcats.items():
                 if (major, sub) in TFIDF_EXCLUDE:
                     continue
-                docs.append(" ".join(p.replace(r"\b", "").replace(".*", " ").replace("'?", "").replace("?", "")
-                                     for p in patterns))
+                doc = " ".join(p.replace(r"\b", "").replace(".*", " ").replace("'?", "").replace("?", "")
+                               for p in patterns)
+                docs.append(_strip_generic(doc))
                 self.ref_labels.append((major, sub))
         self.vectorizer = TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 5))
         self.ref_vectors = self.vectorizer.fit_transform(docs)
@@ -37,7 +51,7 @@ class TfidfFallback:
         """Return ((major, sub), similarity) or None for each normalized label text."""
         if not texts:
             return []
-        sims = cosine_similarity(self.vectorizer.transform(texts), self.ref_vectors)
+        sims = cosine_similarity(self.vectorizer.transform([_strip_generic(t) for t in texts]), self.ref_vectors)
         results = []
         for row in sims:
             best = row.argmax()
