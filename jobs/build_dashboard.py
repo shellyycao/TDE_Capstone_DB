@@ -34,7 +34,11 @@ from taxonomy import CATCH_ALL  # noqa: E402
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument("--schema", default="analytics",
                     help="schema to read charge_categorized from (default: analytics, the shared one)")
-SCHEMA = parser.parse_args().schema
+parser.add_argument("--out", default="summary.json",
+                    help="file name under site/ to write (default: summary.json); view another with "
+                         "http://localhost:8000/?data=<name>")
+args = parser.parse_args()
+SCHEMA = args.schema
 # The schema name is interpolated into SQL, so only allow plain identifiers.
 if not re.fullmatch(r"[a-z_][a-z0-9_]*", SCHEMA):
     sys.exit(f"--schema must be a lowercase identifier like sandbox_yourname, got {SCHEMA!r}")
@@ -48,7 +52,7 @@ for prefix in ("postgres://", "postgresql://"):
         DB_URL = "postgresql+psycopg2://" + DB_URL[len(prefix):]
         break
 
-SUMMARY_PATH = REPO_ROOT / "site" / "summary.json"
+SUMMARY_PATH = REPO_ROOT / "site" / Path(args.out).name
 
 # charge_categorized labels lines with no mapping 'Unmapped'. Fold those into
 # the taxonomy catch-all (which index.html shows as "Other / Uncategorized").
