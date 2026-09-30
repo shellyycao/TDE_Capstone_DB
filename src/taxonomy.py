@@ -31,13 +31,13 @@ TAXONOMY = {
         "Domestic Fuel Surcharge": [r"\bfuel surcharge\b", r"\bfuel\b", r"brandstof"],
     },
     "Accessorial / Delivery Surcharge": {
-        "Delivery Area Surcharge (DAS)": [r"\bdas\b", r"delivery area surcharge"],
+        "Delivery Area Surcharge (DAS)": [r"\bdas\b", r"delivery area surcharge", r"limited access"],
         "Residential Delivery/Surcharge": [r"residential"],
         "Signature Required": [r"signature"],
         "Additional Handling": [r"add'?l handling", r"additional handling", r"handling.*dimension", r"liftgate", r"non.?conveyable"],
         "Saturday / After Hours / Holiday": [r"saturday", r"after hours", r"\bholiday\b"],
         "Demand / Peak Surcharge": [r"demand surcharge", r"surge emergency", r"\bpeak\b"],
-        "Wait Time / Mileage / Toll": [r"wait time", r"additional miles", r"\btoll\b"],
+        "Wait Time / Mileage / Toll": [r"wait time", r"additional miles", r"\btoll\b", r"detention"],
         "Address Correction": [r"address correction"],
         "Security Surcharge": [r"security surcharge", r"\bscreening\b", r"x-ray"],
         # Symmetric counterpart to "Residential Delivery/Surcharge". Deliberately narrow
@@ -49,7 +49,7 @@ TAXONOMY = {
         "Commercial / Business Delivery Surcharge": [r"\bcommercial\b"],
     },
     "Discounts": {
-        "Earned Discount": [r"earned discount"],
+        "Earned Discount": [r"earned discount", r"performance pricing"],
         "Grace Discount": [r"grace discount"],
         "General Discount": [r"\bdiscount\b"],
     },
@@ -60,7 +60,7 @@ TAXONOMY = {
         "VAT": [r"\bvat\b", r"\bbtw\b"],
         "GST / HST": [r"\bgst\b", r"\bhst\b"],
         "Duty & Import Tax": [r"dut(y|ies)", r"import fee", r"import tax"],
-        "Customs / Brokerage": [r"customs?", r"brokerage", r"export declaration", r"international processing", r"internationale verwerkingskosten", r"\beei\b", r"commercial invoice", r"entry line charge"],
+        "Customs / Brokerage": [r"customs?", r"brokerage", r"export declaration", r"international processing", r"internationale verwerkingskosten", r"\beei\b", r"commercial invoice", r"entry line charge", r"entry prep", r"pga lines", r"\bpga\b"],
         "Sales / General Tax": [r"\btax(es)?\b"],
     },
     "Administrative & Service Fees": {
@@ -71,11 +71,11 @@ TAXONOMY = {
         # (e.g. "Shipping Charge Correction Ground" is 4,376 positive vs. 6 negative rows)
         # -- this is billing/accounting corrections that add to the invoice, not a price
         # concession (Discounts) or a carrier-issued refund (Credits).
-        "Billing Adjustment / Correction": [r"billing adjustment", r"shipping charge correction", r"verzendcorrectiekosten", r"\brebill\b"],
+        "Billing Adjustment / Correction": [r"billing adjustment", r"shipping charge correction", r"verzendcorrectiekosten", r"\brebill\b", r"missing pld", r"not previously billed"],
         "Disbursement Fee": [r"disbursement"],
         "Third Party Billing": [r"third party billing"],
         "Document Fee": [r"document fee", r"documents? preparation"],
-        "Returns / Print Label Fee": [r"print.*label", r"returns print label"],
+        "Returns / Print Label Fee": [r"print.*label", r"returns print label", r"retourzending"],
         "Declared Value / Insurance": [r"declared value"],
         "Sustainability / Carbon Fee": [r"gogreen", r"carbon reduced"],
         "Package Handling / Storage": [r"package handling", r"warehouse storage", r"\bstorage\b"],
@@ -93,9 +93,9 @@ TAXONOMY = {
         # transfer" (not "airport transfer") also catches an OCR-mangled variant seen in
         # the raw data: "Al RPORT TRANSFER E".
         "Air Freight": [r"next day", r"2nd day", r"two day", r"3 day", r"third day", r"second day", r"\bair ?freight\b", r"rport transfer"],
-        "International / Export / Import Freight": [r"worldwide express", r"ww express", r"\bexport\b", r"\bimport\b", r"world ?ease", r"international freight"],
+        "International / Export / Import Freight": [r"worldwide express", r"ww express", r"\bexport\b", r"\bimport\b", r"world ?ease", r"international freight", r"premium 12:00", r"premium 9:00", r"premium 10:30", r"standard to canada"],
         "Ocean Freight": [r"ocean"],
-        "General / Mode Not Specified": [r"line haul", r"transportation charge", r"\bbase\b", r"\bfreight\b", r"frt freight"],
+        "General / Mode Not Specified": [r"line haul", r"transportation charge", r"\bbase\b", r"\bfreight\b", r"frt freight", r"all in rate", r"vervoer"],
     },
 }
 
