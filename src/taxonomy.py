@@ -28,17 +28,20 @@ TAXONOMY = {
         "Fuel Surcharge Correction": [r"correction.*fuel", r"fuel.*correction"],
         "Chargeback Fuel Surcharge": [r"chargeback.*fuel"],
         "International Fuel Surcharge": [r"worldease.*fuel", r"international.*fuel"],
-        "Domestic Fuel Surcharge": [r"\bfuel surcharge\b", r"\bfuel\b", r"brandstof"],
+        "Domestic Fuel Surcharge": [r"\bfuel surcharge\b", r"\bfuel\b", r"brandstof", r"\bfsc\b"],
     },
     "Accessorial / Delivery Surcharge": {
-        "Delivery Area Surcharge (DAS)": [r"\bdas\b", r"delivery area surcharge"],
+        "Delivery Area Surcharge (DAS)": [r"\bdas\b", r"delivery area surcharge", r"afgel(egen)?\.? gebied", r"limited access", r"beyond area", r"extended area", r"metro charge", r"\barbitrary\b", r"high cost delivery", r"trade show", r"constr(uction|/utility)? site"],
         "Residential Delivery/Surcharge": [r"residential"],
         "Signature Required": [r"signature"],
-        "Additional Handling": [r"add'?l handling", r"additional handling", r"handling.*dimension", r"liftgate", r"non.?conveyable"],
+        "Additional Handling": [r"add'?l handling", r"additional handling", r"handling.*dimension", r"lift ?gate", r"inside delivery", r"protect from freez", r"temp\.? controlled", r"excess l(e)?n(gth)?\b", r"non.?conveyable", r"extreme length", r"over ?dimension", r"\boversize\b", r"over ?(weight|length)\b", r"over dim\b", r"groot pakket", r"afhandeling", r"dangerous goods", r"\bhazardous\b"],
         "Saturday / After Hours / Holiday": [r"saturday", r"after hours", r"\bholiday\b"],
         "Demand / Peak Surcharge": [r"demand surcharge", r"surge emergency", r"\bpeak\b"],
-        "Wait Time / Mileage / Toll": [r"wait time", r"additional miles", r"\btoll\b"],
+        "Wait Time / Mileage / Toll": [r"wait time", r"additional miles", r"\btoll(ing)?\b", r"detention", r"layover", r"stop ?off", r"time on.?site"],
         "Address Correction": [r"address correction"],
+        "Appointment / Notification": [r"\bappointment\b", r"hour notice", r"\bnotification\b"],
+        "Delivery Attempt / Reconsignment": [r"\battempt(ed)?\b", r"reconsign", r"redelivery"],
+        "Regulatory / Compliance Surcharge": [r"compliance", r"regulatory"],
         "Security Surcharge": [r"security surcharge", r"\bscreening\b", r"x-ray"],
         # Symmetric counterpart to "Residential Delivery/Surcharge". Deliberately narrow
         # (only "commercial", not "business") -- raw data has garbage commodity-description
@@ -49,7 +52,7 @@ TAXONOMY = {
         "Commercial / Business Delivery Surcharge": [r"\bcommercial\b"],
     },
     "Discounts": {
-        "Earned Discount": [r"earned discount"],
+        "Earned Discount": [r"earned discount", r"performance pricing"],
         "Grace Discount": [r"grace discount"],
         "General Discount": [r"\bdiscount\b"],
     },
@@ -59,9 +62,9 @@ TAXONOMY = {
     "Taxes & Customs": {
         "VAT": [r"\bvat\b", r"\bbtw\b"],
         "GST / HST": [r"\bgst\b", r"\bhst\b"],
-        "Duty & Import Tax": [r"dut(y|ies)", r"import fee", r"import tax"],
-        "Customs / Brokerage": [r"customs?", r"brokerage", r"export declaration", r"international processing", r"internationale verwerkingskosten", r"\beei\b", r"commercial invoice", r"entry line charge"],
-        "Sales / General Tax": [r"\btax(es)?\b"],
+        "Duty & Import Tax": [r"dut(y|ies)", r"import fee", r"import tax", r"invoerrecht"],
+        "Customs / Brokerage": [r"customs?", r"inbound processing", r"merchandise processing", r"other gov(ernmen)?t\.? (agency )?fees?", r"\bisf\b", r"\ba?ams fees?\b", r"\bacms\b", r"\bfda\b", r"health canada", r"inklaring", r"border crossing", r"\bpga\b", r"entry prep", r"entry fee", r"multiline entry", r"\bbroker\b", r"\bcci\b", r"\baes\b", r"\b[ao]xp declaration", r"\bbonded\b", r"brokerage", r"export declaration", r"international processing", r"internationale verwerkingskosten", r"\beei\b", r"commercial invoice", r"entry line"],
+        "Sales / General Tax": [r"\btax(es)?\b", r"federal ?tax", r"provincial ?tax"],
     },
     "Administrative & Service Fees": {
         # Always caught earlier by PRIORITY_OVERRIDES; kept here too so it still shows up
@@ -71,31 +74,51 @@ TAXONOMY = {
         # (e.g. "Shipping Charge Correction Ground" is 4,376 positive vs. 6 negative rows)
         # -- this is billing/accounting corrections that add to the invoice, not a price
         # concession (Discounts) or a carrier-issued refund (Credits).
-        "Billing Adjustment / Correction": [r"billing adjustment", r"shipping charge correction", r"verzendcorrectiekosten", r"\brebill\b"],
+        "Billing Adjustment / Correction": [r"billing adjustment", r"shipping charge correction", r"verzendcorrectiekosten", r"\brebill\b", r"reweigh", r"weight changed", r"\binspection\b"],
         "Disbursement Fee": [r"disbursement"],
         "Third Party Billing": [r"third party billing"],
-        "Document Fee": [r"document fee", r"documents? preparation"],
-        "Returns / Print Label Fee": [r"print.*label", r"returns print label"],
-        "Declared Value / Insurance": [r"declared value"],
-        "Sustainability / Carbon Fee": [r"gogreen", r"carbon reduced"],
-        "Package Handling / Storage": [r"package handling", r"warehouse storage", r"\bstorage\b"],
-        "Pickup Service": [r"pickup"],
+        "Document Fee": [r"document fee", r"documents? preparation", r"air ?way ?bill", r"\bawb\b", r"manifest fee", r"admin docs", r"paperwork", r"bill of ?lading", r"delivery order", r"\bd/o fee\b"],
+        "Returns / Print Label Fee": [r"print.*label", r"returns print label", r"return to sender"],
+        "Declared Value / Insurance": [r"declared value", r"\binsurance\b", r"extended liability", r"value protection"],
+        "Cancellation Fee": [r"cancell?ation fee"],
+        "Sustainability / Carbon Fee": [r"gogreen", r"carbon reduced", r"environmental fee"],
+        "Package Handling / Storage": [r"package handling", r"warehouse storage", r"\bstorage\b", r"palleti[sz]"],
+        "Pickup Service": [r"pick ?up"],
     },
     # Ground, Air, International, and Ocean Freight are *mode* subcategories -- the raw
     # label told us which mode. "General / Mode Not Specified" is NOT a fifth mode; it's
     # the fallback for when the raw label just says "Freight" / "Base" / "Transportation
     # Charge" / "Line Haul" without naming a mode at all.
     "Line Haul / Base Transportation": {
-        "Ground": [r"\bground\b", r"\bltl\b", r"truckload", r"road ?freight"],
+        "Ground": [r"\bground\b", r"\bltl\b", r"truckload", r"road ?(freight|transport)", r"delivery via truck"],
         # Broadened beyond just the named express tiers to also catch generic "air
         # freight"/"airfreight" labels and airport-transfer legs (incl. "AFS AIR FREIGHT
         # SURCHARGE ...", "Airline Airfreight Surcharge", "AIRPORT TRANSFER"). "rport
         # transfer" (not "airport transfer") also catches an OCR-mangled variant seen in
         # the raw data: "Al RPORT TRANSFER E".
-        "Air Freight": [r"next day", r"2nd day", r"two day", r"3 day", r"third day", r"second day", r"\bair ?freight\b", r"rport transfer"],
-        "International / Export / Import Freight": [r"worldwide express", r"ww express", r"\bexport\b", r"\bimport\b", r"world ?ease", r"international freight"],
+        "Air Freight": [r"next day", r"2nd day", r"two day", r"3 day", r"third day", r"second day", r"\bair ?freight\b", r"rport transfer", r"airport fees?"],
+        "International / Export / Import Freight": [r"worldwide express", r"ww express", r"\bexport\b", r"\bimport\b", r"world ?ease", r"international freight", r"\bww (saver|expedited)\b", r"worldwide (saver|expedited)", r"\bpremium \d", r"standard to canada"],
         "Ocean Freight": [r"ocean"],
-        "General / Mode Not Specified": [r"line haul", r"transportation charge", r"\bbase\b", r"\bfreight\b", r"frt freight"],
+        "General / Mode Not Specified": [r"line ?haul", r"transportation charge", r"\bbase\b", r"\bfreight\b", r"frt freight", r"\bvracht", r"all in rate", r"\bvervoer\b", r"deficit (wgt|weight)"],
+        # Not a fee label at all: LTL freight bills put the *commodity description* of the
+        # shipped goods ("FILM OR SHEETING NOI NMFC 156830-07 65", "Faucets; Bibcocks; Gate
+        # Valves or", "PALLET STEEL EXPANSION TANK ... 150.0") on the line that carries the
+        # base freight charge. These were ~83% of the uncategorized dollar value. Kept as
+        # its own subcategory (not folded into "Ground") so the team can see how much of
+        # Line Haul comes from these lines and decide separately how to report them.
+        # Listed last so every real fee pattern above wins first, and excluded from the
+        # TF-IDF fallback corpus (see TFIDF_EXCLUDE) so its generic nouns never pull
+        # unrelated fee labels in via fuzzy matching.
+        "LTL Freight (Commodity Line)": [
+            # NMFC tariff vocabulary: item numbers, "not otherwise indicated", density/class
+            r"\bnmfc\b", r"\bnoi\b", r"\bdensit(y|ies)\b", r"\bviz\b", r"\bclass ?\d{2,3}\b", r"\bcl ?\d{2,3}\b",
+            r"\bitem \d{4,6}\b", r"\bsub: ?\d", r"\b\d{5,6}-\d{1,2}\b",
+            # handling-unit prefixes, piece/weight columns, dimensions, UN hazmat numbers
+            r"^(pallets?|plt|piece|pcs|skids?|skd|box|pails?)\b", r"\d;\d{3} \d{3}", r"\b\d+ ?x ?\d+ ?x ?\d+\b", r"\bun\d{4}\b",
+            # high-dollar commodity nouns with none of the markers above (incl. misspellings seen in the data)
+            r"\bartic?l(es|ces)\b", r"\bac(tu|cu|c)ators\b", r"\bmachine(s|ry)\b", r"\bappliances\b", r"\bfaucets\b",
+            r"cable or wire", r"wires ropes", r"\bmodems?\b", r"\belectronics\b", r"vinyl records", r"\bfiberboard\b", r"\bwood doors\b",
+        ],
     },
 }
 
@@ -114,6 +137,11 @@ PRIORITY_OVERRIDES = [
     # "Commercial Invoice" is a customs document, not a delivery surcharge -- must be
     # pulled out before Accessorial's "Commercial / Business Delivery Surcharge" pattern.
     (r"commercial invoice", ("Taxes & Customs", "Customs / Brokerage")),
+    # Container-move charges (chassis rental, drayage, devanning at a container freight
+    # station, container per-diem). Override rather than TAXONOMY pattern for the same
+    # reason as "transport to port" below: "container"/"charges" are too generic for the
+    # TF-IDF corpus.
+    (r"\bchassis\b|drayage|\bdevan\b|\bcfs\b|per diem|\bthc\b|wharfage", ("Line Haul / Base Transportation", "Ocean Freight")),
     # "Ground Residential" / "Next Day Air Commercial" etc. are freight *service-tier*
     # names (the residential- or commercial-rate version of that service), not a
     # standalone residential/commercial delivery surcharge line -- without this override
@@ -132,6 +160,19 @@ PRIORITY_OVERRIDES = [
     # actually happened). Overrides never feed the TF-IDF corpus, so this stays a
     # precise, narrow rule without that side effect.
     (r"transport to port", ("Line Haul / Base Transportation", "Ocean Freight")),
+]
+
+# Checked AFTER the main taxonomy loop, only when nothing in TAXONOMY matched -- the
+# opposite of PRIORITY_OVERRIDES. For prefixed labels the underlying charge wins when it
+# is recognizable ("Returns Fuel Surcharge" stays Fuel Surcharge, "Not Previously Billed
+# Residential Surcharge" stays Residential); the prefix only decides the category when
+# the rest of the label is something the taxonomy doesn't know ("Returns Pre-Release
+# Notification Surcharge", "Not Previously Billed Missing PLD Fee").
+# "Retourzendingen" is Dutch for returns. Kept out of TAXONOMY so these very common
+# prefixes never enter the TF-IDF corpus either.
+FALLBACK_RULES = [
+    (r"^not previously billed\b", ("Administrative & Service Fees", "Billing Adjustment / Correction")),
+    (r"^(retourzendingen|returns)\b", ("Administrative & Service Fees", "Returns / Print Label Fee")),
 ]
 
 # Subcategories excluded from the TF-IDF fallback reference corpus (see ref_docs
@@ -155,6 +196,8 @@ TFIDF_EXCLUDE = {
     # `chargeback.*fuel` in PRIORITY_OVERRIDES is exhaustive for real fuel chargebacks,
     # so nothing real is lost.
     ("Fuel Surcharge", "Chargeback Fuel Surcharge"),
+    # Commodity descriptions, not fee names -- see the comment on this subcategory.
+    ("Line Haul / Base Transportation", "LTL Freight (Commodity Line)"),
 }
 
 
@@ -176,4 +219,7 @@ def rule_classify_row(charge_type, charge_desc):
             for pat in patterns:
                 if re.search(pat, t):
                     return (major, sub)
+    for pat, result in FALLBACK_RULES:
+        if re.search(pat, t):
+            return result
     return None

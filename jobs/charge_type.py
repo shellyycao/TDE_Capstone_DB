@@ -13,9 +13,18 @@ Requires SUPABASE_DB_URL (see .env.example).
 
 Run from the repo root:
     python jobs/charge_type.py
+
+To experiment without touching the shared analytics schema, write to your
+own sandbox schema instead:
+    python jobs/charge_type.py --schema sandbox_yourname
+The first run creates the schema plus its own charge_mapping table and
+charge_categorized / charge_review views (from the migration SQL, pointed at
+that schema). staging.charge is only ever read.
 """
 
+import argparse
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -29,6 +38,16 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from taxonomy import CATCH_ALL, TAXONOMY, TFIDF_EXCLUDE, rule_classify_row  # noqa: E402
+
+MIGRATION_SQL = REPO_ROOT / "supabase" / "migrations" / "20260929000000_analytics_charge_mapping.sql"
+
+parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+parser.add_argument("--schema", default="analytics",
+                    help="schema to write charge_mapping into (default: analytics, the shared one)")
+SCHEMA = parser.parse_args().schema
+# The schema name is interpolated into SQL, so only allow plain identifiers.
+if not re.fullmatch(r"[a-z_][a-z0-9_]*", SCHEMA):
+    sys.exit(f"--schema must be a lowercase identifier like sandbox_yourname, got {SCHEMA!r}")
 
 load_dotenv(REPO_ROOT / ".env")
 DB_URL = os.environ.get("SUPABASE_DB_URL")
@@ -140,7 +159,7 @@ print(f"Final coverage after TF-IDF fallback: {final_coverage * 100:.1f}% of row
 print(unique_labels["Method"].value_counts())
 
 # ---------------------------------------------------------------------------
-# Write analytics.charge_mapping: truncate + append in one transaction.
+# Write <schema>.charge_mapping: truncate + append in one transaction.
 # Never if_exists="replace" -- views depend on the table.
 # ---------------------------------------------------------------------------
 mapping = unique_labels.rename(columns={
@@ -159,6 +178,11 @@ if dupes.any():
     raise ValueError(f"{dupes.sum()} rows violate (charge_type, charge_description) uniqueness:\n{mapping[dupes]}")
 
 with engine.begin() as conn:
-    conn.execute(text("TRUNCATE analytics.charge_mapping"))
-    mapping.to_sql("charge_mapping", conn, schema="analytics", if_exists="append", index=False)
-print(f"Wrote {len(mapping):,} rows to analytics.charge_mapping")
+    if SCHEMA != "analytics":
+        # Same DDL as the shared migration (all IF NOT EXISTS / OR REPLACE), just
+        # retargeted at the sandbox schema. The shared schema is never re-created here.
+        ddl = re.sub(r"\banalytics\b", SCHEMA, MIGRATION_SQL.read_text())
+        conn.exec_driver_sql(ddl)
+    conn.execute(text(f"TRUNCATE {SCHEMA}.charge_mapping"))
+    mapping.to_sql("charge_mapping", conn, schema=SCHEMA, if_exists="append", index=False)
+print(f"Wrote {len(mapping):,} rows to {SCHEMA}.charge_mapping")
