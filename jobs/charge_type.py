@@ -3,7 +3,7 @@ Categorize unique charge labels into analytics.charge_mapping (Supabase/Postgres
 
 Local replacement for the Glue job in charge.py. Classification logic is
 unchanged: rule_classify_row from src/taxonomy.py first, then a TF-IDF
-char_wb 3-5 gram fallback with SIMILARITY_THRESHOLD = 0.25.
+char_wb 3-5 gram fallback with SIMILARITY_THRESHOLD = 0.35.
 
 Reads aggregated (charge_type, charge_description) combinations from
 staging.charge, classifies them, and replaces the contents of
@@ -35,14 +35,13 @@ from pathlib import Path
 
 import pandas as pd
 from dotenv import load_dotenv
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 from sqlalchemy import create_engine, text
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from taxonomy import CATCH_ALL, FALLBACK_RULES, TAXONOMY, TFIDF_EXCLUDE, rule_classify_row  # noqa: E402
+from taxonomy import CATCH_ALL, EXCLUDED, FALLBACK_RULES, TAXONOMY, TFIDF_EXCLUDE, rule_classify_row  # noqa: E402
+from tfidf_fallback import TfidfFallback  # noqa: E402
 
 MIGRATION_SQL = REPO_ROOT / "supabase" / "migrations" / "20260929000000_analytics_charge_mapping.sql"
 
@@ -53,7 +52,7 @@ parser.add_argument("--fallback", choices=["tfidf", "embedding"], default="tfidf
                     help="how to classify labels the rules miss (default: tfidf)")
 parser.add_argument("--threshold", type=float,
                     help="minimum similarity to accept a fallback match "
-                         "(default: 0.25 for tfidf, EMBEDDING_THRESHOLD for embedding)")
+                         "(default: 0.35 for tfidf, EMBEDDING_THRESHOLD for embedding)")
 args = parser.parse_args()
 SCHEMA = args.schema
 FALLBACK = args.fallback
@@ -117,24 +116,9 @@ matched_rows = unique_labels.loc[unique_labels["Major Category"].notna(), "row_c
 print(f"Rule-based coverage: {matched_rows / unique_labels['row_count'].sum() * 100:.1f}% of rows")
 
 # ---------------------------------------------------------------------------
-# TF-IDF fallback for labels the rules missed
+# Fallback for labels the rules missed
 # ---------------------------------------------------------------------------
-ref_docs, ref_labels = [], []
-for major, subcats in TAXONOMY.items():
-    for sub, patterns in subcats.items():
-        if (major, sub) in TFIDF_EXCLUDE:
-            continue
-        doc = " ".join(p.replace(r"\b", "").replace(".*", " ").replace("'?", "").replace("?", "") for p in patterns)
-        ref_docs.append(doc)
-        ref_labels.append((major, sub))
-
-vectorizer = TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 5))
-ref_vectors = vectorizer.fit_transform(ref_docs)
-
-SIMILARITY_THRESHOLD = 0.25
-EMBEDDING_THRESHOLD = 0.75  # calibrated on this data: see the branch comparison notes
-if args.threshold is not None:
-    SIMILARITY_THRESHOLD = EMBEDDING_THRESHOLD = args.threshold
+EMBEDDING_THRESHOLD = 0.75  # calibrated on this data: see eval/fallback_eval_set.csv
 
 
 def normalize(text):
@@ -143,29 +127,15 @@ def normalize(text):
     return str(text).lower().strip()
 
 
-def fallback_classify_row(charge_type, charge_desc):
-    """Return ((major, sub), similarity) for the best match, or None."""
-    t = (normalize(charge_type) + " " + normalize(charge_desc)).strip()
-    if not t:
-        return None
-    vec = vectorizer.transform([t])
-    sims = cosine_similarity(vec, ref_vectors)[0]
-    best_idx = sims.argmax()
-    if sims[best_idx] >= SIMILARITY_THRESHOLD:
-        return ref_labels[best_idx], float(sims[best_idx])
-    return None
-
-
 def label_text(row):
     return (normalize(row["Charge Type"]) + " " + normalize(row["Charge Description"])).strip()
 
 
 unmatched = unique_labels["Major Category"].isna()
+todo = [idx for idx in unique_labels.index[unmatched] if label_text(unique_labels.loc[idx])]
 if FALLBACK == "tfidf":
-    fallback_results = {
-        idx: fallback_classify_row(unique_labels.loc[idx, "Charge Type"], unique_labels.loc[idx, "Charge Description"])
-        for idx in unique_labels.index[unmatched]
-    }
+    tfidf = TfidfFallback() if args.threshold is None else TfidfFallback(args.threshold)
+    fallback_results = dict(zip(todo, tfidf.classify([label_text(unique_labels.loc[i]) for i in todo])))
 else:
     from embedding_fallback import EmbeddingFallback
 
@@ -179,7 +149,7 @@ else:
     references = {
         (label_text(r), (r["Major Category"], r["Subcategory"]))
         for _, r in ruled.iterrows()
-        if (r["Major Category"], r["Subcategory"]) not in TFIDF_EXCLUDE
+        if (r["Major Category"], r["Subcategory"]) not in TFIDF_EXCLUDE | {EXCLUDED}
         and not any(re.search(pat, label_text(r)) for pat, _ in FALLBACK_RULES)
     }
     references |= {
@@ -187,9 +157,8 @@ else:
         for major, subcats in TAXONOMY.items() for sub in subcats
         if (major, sub) not in TFIDF_EXCLUDE
     }
-    todo = [idx for idx in unique_labels.index[unmatched] if label_text(unique_labels.loc[idx])]
     print(f"Embedding {len(todo):,} unmatched labels against {len(references):,} references...")
-    embedder = EmbeddingFallback(sorted(references), threshold=EMBEDDING_THRESHOLD)
+    embedder = EmbeddingFallback(sorted(references), threshold=EMBEDDING_THRESHOLD if args.threshold is None else args.threshold)
     fallback_results = dict(zip(todo, embedder.classify([label_text(unique_labels.loc[i]) for i in todo])))
 
 for idx, result in fallback_results.items():

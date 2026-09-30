@@ -32,13 +32,13 @@ TAXONOMY = {
     },
     "Accessorial / Delivery Surcharge": {
         "Delivery Area Surcharge (DAS)": [r"\bdas\b", r"delivery area surcharge", r"afgel(egen)?\.? gebied", r"limited access", r"beyond area", r"extended area", r"metro charge", r"\barbitrary\b", r"high cost delivery", r"trade show", r"constr(uction|/utility)? site"],
-        "Residential Delivery/Surcharge": [r"residential"],
+        "Residential Delivery/Surcharge": [r"residenti(al|eel)"],
         "Signature Required": [r"signature"],
-        "Additional Handling": [r"add'?l handling", r"additional handling", r"handling.*dimension", r"lift ?gate", r"inside delivery", r"protect from freez", r"temp\.? controlled", r"excess l(e)?n(gth)?\b", r"non.?conveyable", r"extreme length", r"over ?dimension", r"\boversize\b", r"over ?(weight|length)\b", r"over dim\b", r"groot pakket", r"afhandeling", r"dangerous goods", r"\bhazardous\b"],
+        "Additional Handling": [r"add'?l handling", r"additional handling", r"handling.*dimension", r"\bahs\b", r"lift ?gate", r"laadklep", r"assistentie", r"driver assist", r"inside delivery", r"protect from freez", r"temp\.? controlled", r"excess l(e)?n(gth)?\b", r"non.?conveyable", r"extreme length", r"over ?dimension", r"\boversize\b", r"over ?(weight|length)\b", r"over dim\b", r"groot pakket", r"afhandeling", r"dangerous goods", r"\bhazardous\b"],
         "Saturday / After Hours / Holiday": [r"saturday", r"after hours", r"\bholiday\b"],
-        "Demand / Peak Surcharge": [r"demand surcharge", r"surge emergency", r"\bpeak\b"],
-        "Wait Time / Mileage / Toll": [r"wait time", r"additional miles", r"\btoll(ing)?\b", r"detention", r"layover", r"stop ?off", r"time on.?site"],
-        "Address Correction": [r"address correction"],
+        "Demand / Peak Surcharge": [r"demand surcharge", r"surge emergency", r"\bpeak\b", r"surge fee", r"wintertoeslag"],
+        "Wait Time / Mileage / Toll": [r"wait time", r"additional miles", r"\btoll(ing)?\b", r"detention", r"layover", r"stop ?off", r"time on.?site", r"\b(extra|additional|add) stop\b"],
+        "Address Correction": [r"address correction", r"adrescorrectie"],
         "Appointment / Notification": [r"\bappointment\b", r"hour notice", r"\bnotification\b"],
         "Delivery Attempt / Reconsignment": [r"\battempt(ed)?\b", r"reconsign", r"redelivery"],
         "Regulatory / Compliance Surcharge": [r"compliance", r"regulatory"],
@@ -60,10 +60,10 @@ TAXONOMY = {
         "Credit From Carrier": [r"credit from carrier"],
     },
     "Taxes & Customs": {
-        "VAT": [r"\bvat\b", r"\bbtw\b"],
+        "VAT": [r"\bvat\b", r"\bbtw\b", r"\biva\b"],
         "GST / HST": [r"\bgst\b", r"\bhst\b"],
         "Duty & Import Tax": [r"dut(y|ies)", r"import fee", r"import tax", r"invoerrecht"],
-        "Customs / Brokerage": [r"customs?", r"inbound processing", r"merchandise processing", r"other gov(ernmen)?t\.? (agency )?fees?", r"\bisf\b", r"\ba?ams fees?\b", r"\bacms\b", r"\bfda\b", r"health canada", r"inklaring", r"border crossing", r"\bpga\b", r"entry prep", r"entry fee", r"multiline entry", r"\bbroker\b", r"\bcci\b", r"\baes\b", r"\b[ao]xp declaration", r"\bbonded\b", r"brokerage", r"export declaration", r"international processing", r"internationale verwerkingskosten", r"\beei\b", r"commercial invoice", r"entry line"],
+        "Customs / Brokerage": [r"customs?", r"inbound processing", r"merchandise processing", r"other gov(ernmen)?t\.? (agency )?fees?", r"\bisf\b", r"\ba?ams fees?\b", r"\bacms\b", r"\bfda\b", r"health canada", r"inklaring", r"border crossing", r"\bpga\b", r"entry prep", r"tariefposten", r"aduana", r"entry fee", r"multiline entry", r"\bbroker\b", r"\bcci\b", r"\baes\b", r"\b[ao]xp declaration", r"\bbonded\b", r"brokerage", r"export declaration", r"international processing", r"internationale verwerkingskosten", r"\beei\b", r"commercial invoice", r"entry line"],
         "Sales / General Tax": [r"\btax(es)?\b", r"federal ?tax", r"provincial ?tax"],
     },
     "Administrative & Service Fees": {
@@ -74,15 +74,15 @@ TAXONOMY = {
         # (e.g. "Shipping Charge Correction Ground" is 4,376 positive vs. 6 negative rows)
         # -- this is billing/accounting corrections that add to the invoice, not a price
         # concession (Discounts) or a carrier-issued refund (Credits).
-        "Billing Adjustment / Correction": [r"billing adjustment", r"shipping charge correction", r"verzendcorrectiekosten", r"\brebill\b", r"reweigh", r"weight changed", r"\binspection\b"],
-        "Disbursement Fee": [r"disbursement"],
+        "Billing Adjustment / Correction": [r"billing adjustment", r"shipping charge correction", r"verzendcorrectiekosten", r"\brebill\b", r"aanpassing", r"reweigh", r"weight changed", r"\binspection\b"],
+        "Disbursement Fee": [r"disbursement", r"uitbetaling"],
         "Third Party Billing": [r"third party billing"],
         "Document Fee": [r"document fee", r"documents? preparation", r"air ?way ?bill", r"\bawb\b", r"manifest fee", r"admin docs", r"paperwork", r"bill of ?lading", r"delivery order", r"\bd/o fee\b"],
         "Returns / Print Label Fee": [r"print.*label", r"returns print label", r"return to sender"],
         "Declared Value / Insurance": [r"declared value", r"\binsurance\b", r"extended liability", r"value protection"],
         "Cancellation Fee": [r"cancell?ation fee"],
-        "Sustainability / Carbon Fee": [r"gogreen", r"carbon reduced", r"environmental fee"],
-        "Package Handling / Storage": [r"package handling", r"warehouse storage", r"\bstorage\b", r"palleti[sz]"],
+        "Sustainability / Carbon Fee": [r"gogreen", r"carbon reduced", r"environmental fee", r"milieu"],
+        "Package Handling / Storage": [r"package handling", r"warehouse storage", r"\bstorage\b", r"palleti[sz]", r"opslag"],
         "Pickup Service": [r"pick ?up"],
     },
     # Ground, Air, International, and Ocean Freight are *mode* subcategories -- the raw
@@ -98,8 +98,8 @@ TAXONOMY = {
         # the raw data: "Al RPORT TRANSFER E".
         "Air Freight": [r"next day", r"2nd day", r"two day", r"3 day", r"third day", r"second day", r"\bair ?freight\b", r"rport transfer", r"airport fees?"],
         "International / Export / Import Freight": [r"worldwide express", r"ww express", r"\bexport\b", r"\bimport\b", r"world ?ease", r"international freight", r"\bww (saver|expedited)\b", r"worldwide (saver|expedited)", r"\bpremium \d", r"standard to canada"],
-        "Ocean Freight": [r"ocean"],
-        "General / Mode Not Specified": [r"line ?haul", r"transportation charge", r"\bbase\b", r"\bfreight\b", r"frt freight", r"\bvracht", r"all in rate", r"\bvervoer\b", r"deficit (wgt|weight)"],
+        "Ocean Freight": [r"ocean", r"sea ?freight"],
+        "General / Mode Not Specified": [r"line ?haul", r"transportation charge", r"\bbase\b", r"\bfreight\b", r"frt freight", r"\bvracht", r"all in rate", r"\bvervoer\b", r"deficit (wgt|weight)", r"\bas weight\b", r"minimum charg", r"transportation coord"],
         # Not a fee label at all: LTL freight bills put the *commodity description* of the
         # shipped goods ("FILM OR SHEETING NOI NMFC 156830-07 65", "Faucets; Bibcocks; Gate
         # Valves or", "PALLET STEEL EXPANSION TANK ... 150.0") on the line that carries the
@@ -114,15 +114,29 @@ TAXONOMY = {
             r"\bnmfc\b", r"\bnoi\b", r"\bdensit(y|ies)\b", r"\bviz\b", r"\bclass ?\d{2,3}\b", r"\bcl ?\d{2,3}\b",
             r"\bitem \d{4,6}\b", r"\bsub: ?\d", r"\b\d{5,6}-\d{1,2}\b",
             # handling-unit prefixes, piece/weight columns, dimensions, UN hazmat numbers
-            r"^(pallets?|plt|piece|pcs|skids?|skd|box|pails?)\b", r"\d;\d{3} \d{3}", r"\b\d+ ?x ?\d+ ?x ?\d+\b", r"\bun\d{4}\b",
+            r"^(pallets?|plt|piece|pcs|skids?|skd|box|pails?)\b", r"\d;\d{3} \d{3}", r"\b\d+ ?x ?\d+ ?x ?\d+\b", r"\bun ?\d{4}\b",
+            # trailing freight class as "c60" / OCR'd "ce0" ("CABLE C60", "POWER ADAPTER c60", "DIGITAL CABLE ce0")
+            r"\bc(\d|e)\d\b",
             # high-dollar commodity nouns with none of the markers above (incl. misspellings seen in the data)
             r"\bartic?l(es|ces)\b", r"\bac(tu|cu|c)ators\b", r"\bmachine(s|ry)\b", r"\bappliances\b", r"\bfaucets\b",
             r"cable or wire", r"wires ropes", r"\bmodems?\b", r"\belectronics\b", r"vinyl records", r"\bfiberboard\b", r"\bwood doors\b",
+            r"\bequipment\b", r"electronic parts", r"\bcartons\b", r"\bhardware\b", r"\bcable\b", r"\bheating element\b", r"\bincubator\b", r"pressu?s?re chamber",
         ],
     },
 }
 
 CATCH_ALL = ("Other / Uncategorized", "Unclassified")
+
+# Lines that are not charges at all but totals printed on the invoice -- counting them
+# next to the line items they sum would double the invoice amount. Checked before
+# anything else; build_dashboard.py leaves this category out of every aggregate, while
+# charge_mapping still records it so the decision stays visible and reversible.
+EXCLUDED = ("Excluded / Not a Charge", "Invoice Total / Summary Line")
+EXCLUDE_PATTERNS = [
+    r"\bsum \*{3}",                 # R&L "*** SUM *** WEIGHT & CHARGE" (+ garbled "**%* SUM ***")
+    r"^(totals?\s*)+$",             # bare "TOTALS" (type and description both "TOTALS")
+    r"original invoice amount",     # FedEx Freight: the pre-correction invoice total
+]
 
 # Checked BEFORE the main taxonomy loop -- these are cases where a generic pattern
 # elsewhere in TAXONOMY would otherwise fire first and give the wrong answer.
@@ -211,6 +225,9 @@ def rule_classify_row(charge_type, charge_desc):
     t = (normalize(charge_type) + " " + normalize(charge_desc)).strip()
     if not t:
         return None
+    for pat in EXCLUDE_PATTERNS:
+        if re.search(pat, t):
+            return EXCLUDED
     for pat, result in PRIORITY_OVERRIDES:
         if re.search(pat, t):
             return result
