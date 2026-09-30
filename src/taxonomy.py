@@ -98,7 +98,7 @@ TAXONOMY = {
         # the raw data: "Al RPORT TRANSFER E".
         "Air Freight": [r"next day", r"2nd day", r"two day", r"3 day", r"third day", r"second day", r"\bair ?freight\b", r"rport transfer", r"airport fees?"],
         "International / Export / Import Freight": [r"worldwide express", r"ww express", r"\bexport\b", r"\bimport\b", r"world ?ease", r"international freight", r"\bww (saver|expedited)\b", r"worldwide (saver|expedited)", r"\bpremium \d", r"standard to canada"],
-        "Ocean Freight": [r"ocean", r"sea ?freight"],
+        "Ocean Freight": [r"ocean"],
         "General / Mode Not Specified": [r"line ?haul", r"transportation charge", r"\bbase\b", r"\bfreight\b", r"frt freight", r"\bvracht", r"all in rate", r"\bvervoer\b", r"deficit (wgt|weight)", r"\bas weight\b", r"minimum charg", r"transportation coord"],
         # Not a fee label at all: LTL freight bills put the *commodity description* of the
         # shipped goods ("FILM OR SHEETING NOI NMFC 156830-07 65", "Faucets; Bibcocks; Gate
@@ -174,6 +174,11 @@ PRIORITY_OVERRIDES = [
     # actually happened). Overrides never feed the TF-IDF corpus, so this stays a
     # precise, narrow rule without that side effect.
     (r"transport to port", ("Line Haul / Base Transportation", "Ocean Freight")),
+    # Same reason again: as a TAXONOMY pattern "sea freight" turned Ocean Freight's
+    # reference doc into "ocean sea freight" -- short and containing "freight" -- so the
+    # fallback pulled almost any unmatched label mentioning freight into Ocean Freight
+    # (caught by eval/holdout_eval.py).
+    (r"sea ?freight", ("Line Haul / Base Transportation", "Ocean Freight")),
 ]
 
 # Checked AFTER the main taxonomy loop, only when nothing in TAXONOMY matched -- the
