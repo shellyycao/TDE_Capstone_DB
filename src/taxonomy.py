@@ -47,8 +47,9 @@ TAXONOMY = {
             r"signature",
         ],
         "Additional Handling": [
-            r"add'?l handling", r"additional handling", r"handling.*dimension", r"\bahs\b", r"additional piece",
-            r"lift ?gate", r"driver assist", r"inside delivery", r"protect from freez", r"temp\.? controlled",
+            r"add'?l\.? handling", r"additional handling", r"\b(origin|destination|org\.|dest\.) handling\b", r"handling.*dimension", r"\bahs\b", r"additional piece",
+            r"^large package surcharge", r"terminal ?/? ?h(a)?n?dl",
+            r"lift ?gate", r"driver assist", r"inside delivery", r"protect from freez", r"temp\.? control",
             r"excess l(e)?n(gth)?\b", r"non.?conveyable", r"extreme length", r"over ?dimension", r"\boversize\b",
             r"over ?(weight|length)\b", r"over dim\b", r"\bover max", r"dangerous goods", r"\bhazardous\b",
         ],
@@ -154,7 +155,7 @@ TAXONOMY = {
     # the fallback for when the raw label just says "Freight" / "Base" / "Transportation
     # Charge" / "Line Haul" without naming a mode at all.
     "Line Haul / Base Transportation": {
-        "Ground": [r"\bground\b", r"\bltl\b", r"truckload", r"road ?(freight|transport)", r"delivery via truck"],
+        "Ground": [r"\bground\b", r"\bltl\b", r"truckload", r"road ?(freight|transport)", r"delivery via truck", r"delivery cartage"],
         # Broadened beyond just the named express tiers to also catch generic "air
         # freight"/"airfreight" labels and airport-transfer legs (incl. "AFS AIR FREIGHT
         # SURCHARGE ...", "Airline Airfreight Surcharge", "AIRPORT TRANSFER"). "rport
@@ -308,6 +309,22 @@ FOREIGN_PATTERNS = {
 
 CATCH_ALL = ("Other / Uncategorized", "Unclassified")
 
+# Labels a person reviewed and assigned by hand, keyed by the exact charge description
+# (lower-cased). Checked before every pattern, and never part of the TF-IDF corpus, so a
+# decision here affects only that label. Add to this table rather than writing a regex
+# when a label is a one-off code whose meaning came from someone who knows the billing.
+REVIEWED_LABELS = {
+    "flat": ("Line Haul / Base Transportation", "General / Mode Not Specified"),            # flat-rate freight
+    "dest delivery": ("Line Haul / Base Transportation", "General / Mode Not Specified"),
+    "final delivery": ("Line Haul / Base Transportation", "General / Mode Not Specified"),
+    "78 00% olsc": ("Discounts", "General Discount"),                                        # OCR of "78.00% DISC"
+    # ISS: provisional, meaning still to be confirmed. 1SS / [SS are OCR variants of it
+    # (same carrier).
+    "iss": ("Accessorial / Delivery Surcharge", "Security Surcharge"),
+    "1ss": ("Accessorial / Delivery Surcharge", "Security Surcharge"),
+    "[ss": ("Accessorial / Delivery Surcharge", "Security Surcharge"),
+}
+
 # Checked BEFORE the main taxonomy loop -- these are cases where a generic pattern
 # elsewhere in TAXONOMY would otherwise fire first and give the wrong answer.
 PRIORITY_OVERRIDES = [
@@ -411,6 +428,9 @@ def rule_classify_row(charge_type, charge_desc):
     t = (normalize(charge_type) + " " + normalize(charge_desc)).strip()
     if not t:
         return None
+    reviewed = REVIEWED_LABELS.get(normalize(charge_desc) or normalize(charge_type))
+    if reviewed:
+        return reviewed
     for pat, result in PRIORITY_OVERRIDES:
         if re.search(pat, t):
             return result

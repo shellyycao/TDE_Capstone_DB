@@ -123,10 +123,27 @@ CASES = [
     ("*** SUM *** WEIGHT & CHARGE", "General / Mode Not Specified"),
     ("**%* SUM *** WEIGHT & CHARGE", "General / Mode Not Specified"),
     ("TOTALS", "General / Mode Not Specified"),
+    # Reviewed by hand (REVIEWED_LABELS) and the patterns added alongside them
+    ("FLAT", "General / Mode Not Specified"),
+    ("DEST DELIVERY", "General / Mode Not Specified"),
+    ("FINAL DELIVERY", "General / Mode Not Specified"),
+    ("78 00% OlSC", "General Discount"),
+    ("ISS", "Security Surcharge"),
+    ("1SS", "Security Surcharge"),
+    ("Delivery Cartage", "Ground"),
+    ("Large Package Surcharge Comm - Length", "Additional Handling"),
+    ("Dest. Terminal Handling-Forwarder - Greater of (Min", "Additional Handling"),
+    ("IMP/A TERMINAL HNDLG", "Additional Handling"),
+    ("Shipping Charge Correction Large Package Surcharge - Length + Girth", "Billing Adjustment / Correction"),
+    ("THC (Terminal Handling Charge) - Export", "Ocean Freight"),
+    ("Pick Up Cartage", "Pickup Service"),
+    ("Addl. Handling weight", "Additional Handling"),
+    ("org. Temp. Control Handling", "Additional Handling"),
+    ("Origin Handling Fee", "Additional Handling"),
 ]
 
 # Meaning not settled yet -- must stay unmatched so it lands in charge_review.
-UNMATCHED_CASES = ["Original Invoice Amount"]
+UNMATCHED_CASES = ["Original Invoice Amount", "LEASE; REPO & WAIVER", "Service Charge"]
 
 failures = []
 for label, expected in CASES:

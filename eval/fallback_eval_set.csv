@@ -9,13 +9,13 @@ id,charge_type,charge_description,stratum,expected
 7,Early Surcharge,Early Surcharge,top,UNSURE
 8,WAITING TIME @ TENDER,WAITING TIME @ TENDER,top,Wait Time / Mileage / Toll
 9,DOCUMENT MANAGEMENT,DOCUMENT MANAGEMENT,top,Document Fee
-10,FLAT,FLAT,top,UNSURE
+10,FLAT,FLAT,top,General / Mode Not Specified
 11,*** SUM *** WEIGHT & CHARGE,*** SUM *** WEIGHT & CHARGE,top,General / Mode Not Specified
 12,Addl. Handling weight,Addl. Handling weight,top,Additional Handling
 13,Residentieel,Residentieel,top,Residential Delivery/Surcharge
 14,org. Terminal Handling-Forwarder - Greater of (Min,org. Terminal Handling-Forwarder - Greater of (Min,top,Additional Handling;Package Handling / Storage
 15,Adrescorrectie TB Express Saver,Adrescorrectie TB Express Saver,top,Address Correction
-16,ISS,ISS,top,UNSURE
+16,ISS,ISS,top,Security Surcharge
 17,SECURITY FEE,SECURITY FEE,top,Security Surcharge
 18,Surge Fee - Particulier,Surge Fee - Particulier,top,Demand / Peak Surcharge
 19,WAITING TIME @ PU,WAITING TIME @ PU,top,Wait Time / Mileage / Toll
@@ -74,10 +74,10 @@ id,charge_type,charge_description,stratum,expected
 72,Pharma check,Pharma check,top,UNSURE
 73,PU AND HOLD,PU AND HOLD,top,Pickup Service
 74,TRANSPORTATION COORD,TRANSPORTATION COORD,top,General / Mode Not Specified
-75,1SS,1SS,top,UNSURE
+75,1SS,1SS,top,Security Surcharge
 76,Special DL,Special DL,top,UNSURE
 77,ADDITIONAL CLASSIFICATIONS,ADDITIONAL CLASSIFICATIONS,top,Customs / Brokerage
-78,[SS,[SS,top,UNSURE
+78,[SS,[SS,top,Security Surcharge
 79,DELIVERY CHARGE,DELIVERY CHARGE,top,General / Mode Not Specified;Ground
 80,Original Invoice Amount,Original Invoice Amount,top,UNSURE
 81,ZONE ADJUSTMENT Addl. Handling weight,ZONE ADJUSTMENT Addl. Handling weight,top,Additional Handling;Billing Adjustment / Correction
