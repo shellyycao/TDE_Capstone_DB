@@ -29,7 +29,7 @@ from sqlalchemy import create_engine, text
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from taxonomy import CATCH_ALL, EXCLUDED  # noqa: E402
+from taxonomy import CATCH_ALL  # noqa: E402
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument("--schema", default="analytics",
@@ -67,7 +67,6 @@ FROM (
          CASE WHEN major_category = 'Unmapped' THEN :catch_sub   ELSE subcategory    END AS subcategory,
          charge_value
   FROM {SCHEMA}.charge_categorized
-  WHERE major_category <> :excluded_major
 ) t
 GROUP BY major_category, subcategory
 ORDER BY major_category, total_value DESC
@@ -80,7 +79,6 @@ SELECT {entity} AS entity,
        coalesce(sum(c.charge_value), 0) AS total_value
 FROM {schema}.charge_categorized c
 LEFT JOIN staging.shipment s ON c.shipment_id = s.shipment_id
-WHERE c.major_category <> :excluded_major
 GROUP BY 1, 2
 ORDER BY entity, total_value DESC
 """
@@ -98,9 +96,7 @@ TOP_N_COMPANIES = 24
 TOP_N_CARRIERS = 24
 
 engine = create_engine(DB_URL)
-# Invoice totals / summary lines (taxonomy.EXCLUDED) would double-count the line
-# items they sum, so every aggregate leaves them out.
-params = {"catch_major": CATCH_ALL[0], "catch_sub": CATCH_ALL[1], "excluded_major": EXCLUDED[0]}
+params = {"catch_major": CATCH_ALL[0], "catch_sub": CATCH_ALL[1]}
 
 print(f"Reading {SCHEMA}.charge_categorized")
 with engine.connect() as conn:

@@ -3,8 +3,7 @@
 eval/fallback_eval_set.csv holds 200 labels the taxonomy rules missed when it was
 built (the 150 most frequent plus 50 random ones from the tail), each with the
 subcategory it should get -- several separated by ";" when more than one is
-defensible -- or EXCLUDE (an invoice total that must not be counted) or UNSURE
-(not scored). Labels were assigned by reading the label text, not verified against
+defensible -- or UNSURE (not scored). Labels were assigned by reading the label text, not verified against
 source invoices, so treat the numbers as a regression check, not ground truth.
 
 Runs the current rules, then the TF-IDF fallback at several thresholds, and
@@ -21,7 +20,7 @@ import pandas as pd
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from taxonomy import EXCLUDED, normalize, rule_classify_row  # noqa: E402
+from taxonomy import normalize, rule_classify_row  # noqa: E402
 from tfidf_fallback import SIMILARITY_THRESHOLD, TfidfFallback  # noqa: E402
 
 ev = pd.read_csv(REPO_ROOT / "eval" / "fallback_eval_set.csv", keep_default_na=False)
@@ -32,8 +31,6 @@ raw = TfidfFallback(threshold=0).classify(list(ev.text))
 
 
 def is_correct(category, expected):
-    if expected == "EXCLUDE":
-        return category == EXCLUDED
     return category is not None and category[1] in expected.split(";")
 
 

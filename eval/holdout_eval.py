@@ -16,7 +16,7 @@ Two ways to hide (--hide):
 
 Left out, because the fallback could never be right on them by construction or the
 rule's answer isn't about the charge itself: labels caught by FALLBACK_RULES (the
-category comes from a prefix), invoice totals (EXCLUDED), subcategories outside the
+category comes from a prefix), subcategories outside the
 TF-IDF candidate pool (TFIDF_EXCLUDE), and commodity-description lines -- anything
 the LTL Freight (Commodity Line) patterns match, even when an earlier pattern won
 ("Freight | PLT NMFC 051080 faucets ... class 70" is caught by `\bfreight\b`). There
@@ -53,7 +53,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from taxonomy import (  # noqa: E402
-    EXCLUDE_PATTERNS, FALLBACK_RULES, PRIORITY_OVERRIDES, TAXONOMY, TFIDF_EXCLUDE, normalize,
+    FALLBACK_RULES, PRIORITY_OVERRIDES, TAXONOMY, TFIDF_EXCLUDE, normalize,
 )
 
 COMMODITY_PATTERNS = TAXONOMY["Line Haul / Base Transportation"]["LTL Freight (Commodity Line)"]
@@ -82,8 +82,6 @@ labels["text"] = [(normalize(a) + " " + normalize(b)).strip() for a, b in zip(la
 
 def rule_with_source(t):
     """Same order as taxonomy.rule_classify_row, but also says which stage and pattern matched."""
-    if any(re.search(p, t) for p in EXCLUDE_PATTERNS):
-        return None, "excluded", None
     for pat, result in PRIORITY_OVERRIDES:
         if re.search(pat, t):
             return result, "override", None

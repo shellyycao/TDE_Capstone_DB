@@ -308,17 +308,6 @@ FOREIGN_PATTERNS = {
 
 CATCH_ALL = ("Other / Uncategorized", "Unclassified")
 
-# Lines that are not charges at all but totals printed on the invoice -- counting them
-# next to the line items they sum would double the invoice amount. Checked before
-# anything else; build_dashboard.py leaves this category out of every aggregate, while
-# charge_mapping still records it so the decision stays visible and reversible.
-EXCLUDED = ("Excluded / Not a Charge", "Invoice Total / Summary Line")
-EXCLUDE_PATTERNS = [
-    r"\bsum \*{3}",                 # R&L "*** SUM *** WEIGHT & CHARGE" (+ garbled "**%* SUM ***")
-    r"^(totals?\s*)+$",             # bare "TOTALS" (type and description both "TOTALS")
-    r"original invoice amount",     # FedEx Freight: the pre-correction invoice total
-]
-
 # Checked BEFORE the main taxonomy loop -- these are cases where a generic pattern
 # elsewhere in TAXONOMY would otherwise fire first and give the wrong answer.
 PRIORITY_OVERRIDES = [
@@ -360,6 +349,14 @@ PRIORITY_OVERRIDES = [
     # fallback pulled almost any unmatched label mentioning freight into Ocean Freight
     # (caught by eval/holdout_eval.py).
     (r"sea ?freight", ("Line Haul / Base Transportation", "Ocean Freight")),
+    # "*** SUM *** WEIGHT & CHARGE" (R&L, incl. the garbled "**%* SUM ***") and bare
+    # "TOTALS" / "TOTAL" look like invoice totals but are the base freight charge:
+    # checked shipment by shipment, they never equal the other lines on the same
+    # shipment, the shipment has no separate freight line, and the fuel surcharge next to
+    # them runs ~30% of their value (e.g. 45.28 fuel on 147.98). Overrides rather than
+    # TAXONOMY patterns so "sum" / "totals" stay out of the TF-IDF corpus.
+    (r"\bsum \*{3}", ("Line Haul / Base Transportation", "General / Mode Not Specified")),
+    (r"^(totals?\s*)+$", ("Line Haul / Base Transportation", "General / Mode Not Specified")),
 ]
 
 # Checked AFTER the main taxonomy loop, only when nothing in TAXONOMY matched -- the
@@ -414,9 +411,6 @@ def rule_classify_row(charge_type, charge_desc):
     t = (normalize(charge_type) + " " + normalize(charge_desc)).strip()
     if not t:
         return None
-    for pat in EXCLUDE_PATTERNS:
-        if re.search(pat, t):
-            return EXCLUDED
     for pat, result in PRIORITY_OVERRIDES:
         if re.search(pat, t):
             return result

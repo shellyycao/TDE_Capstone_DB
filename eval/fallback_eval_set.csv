@@ -10,7 +10,7 @@ id,charge_type,charge_description,stratum,expected
 8,WAITING TIME @ TENDER,WAITING TIME @ TENDER,top,Wait Time / Mileage / Toll
 9,DOCUMENT MANAGEMENT,DOCUMENT MANAGEMENT,top,Document Fee
 10,FLAT,FLAT,top,UNSURE
-11,*** SUM *** WEIGHT & CHARGE,*** SUM *** WEIGHT & CHARGE,top,EXCLUDE
+11,*** SUM *** WEIGHT & CHARGE,*** SUM *** WEIGHT & CHARGE,top,General / Mode Not Specified
 12,Addl. Handling weight,Addl. Handling weight,top,Additional Handling
 13,Residentieel,Residentieel,top,Residential Delivery/Surcharge
 14,org. Terminal Handling-Forwarder - Greater of (Min,org. Terminal Handling-Forwarder - Greater of (Min,top,Additional Handling;Package Handling / Storage
@@ -79,12 +79,12 @@ id,charge_type,charge_description,stratum,expected
 77,ADDITIONAL CLASSIFICATIONS,ADDITIONAL CLASSIFICATIONS,top,Customs / Brokerage
 78,[SS,[SS,top,UNSURE
 79,DELIVERY CHARGE,DELIVERY CHARGE,top,General / Mode Not Specified;Ground
-80,Original Invoice Amount,Original Invoice Amount,top,EXCLUDE
+80,Original Invoice Amount,Original Invoice Amount,top,UNSURE
 81,ZONE ADJUSTMENT Addl. Handling weight,ZONE ADJUSTMENT Addl. Handling weight,top,Additional Handling;Billing Adjustment / Correction
 82,TERMI NAL CHARGE,TERMI NAL CHARGE,top,Additional Handling;Package Handling / Storage
 83,KA,KA,top,UNSURE
 84,Origin Documentation Fee,Origin Documentation Fee,top,Document Fee
-85,**%* SUM *** WEIGHT & CHARGE,**%* SUM *** WEIGHT & CHARGE,top,EXCLUDE
+85,**%* SUM *** WEIGHT & CHARGE,**%* SUM *** WEIGHT & CHARGE,top,General / Mode Not Specified
 86,ADDL INVOICE,ADDL INVOICE,top,Customs / Brokerage;Document Fee
 87,Waste disposal,Waste disposal,top,UNSURE
 88,DOC,DOC,top,Document Fee

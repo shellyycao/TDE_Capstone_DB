@@ -17,7 +17,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from taxonomy import EXCLUDED, rule_classify_row  # noqa: E402
+from taxonomy import rule_classify_row  # noqa: E402
 
 CASES = [
     # --- Dutch (real labels) ---
@@ -119,20 +119,25 @@ CASES = [
     ("PICKUP", "Pickup Service"),
     ("Freight", "General / Mode Not Specified"),
     ("Performance Pricing", "Earned Discount"),
+    # Look like invoice totals but are the base freight charge (see PRIORITY_OVERRIDES)
+    ("*** SUM *** WEIGHT & CHARGE", "General / Mode Not Specified"),
+    ("**%* SUM *** WEIGHT & CHARGE", "General / Mode Not Specified"),
+    ("TOTALS", "General / Mode Not Specified"),
 ]
 
-EXCLUDE_CASES = ["*** SUM *** WEIGHT & CHARGE", "**%* SUM *** WEIGHT & CHARGE", "TOTALS", "Original Invoice Amount"]
+# Meaning not settled yet -- must stay unmatched so it lands in charge_review.
+UNMATCHED_CASES = ["Original Invoice Amount"]
 
 failures = []
 for label, expected in CASES:
     got = rule_classify_row(label, label)
     if got is None or got[1] != expected:
         failures.append(f"  {label!r}: expected {expected!r}, got {got[1] if got else None!r}")
-for label in EXCLUDE_CASES:
-    if rule_classify_row(label, label) != EXCLUDED:
-        failures.append(f"  {label!r}: expected EXCLUDED, got {rule_classify_row(label, label)!r}")
+for label in UNMATCHED_CASES:
+    if rule_classify_row(label, label) is not None:
+        failures.append(f"  {label!r}: expected no rule to match, got {rule_classify_row(label, label)!r}")
 
-total = len(CASES) + len(EXCLUDE_CASES)
+total = len(CASES) + len(UNMATCHED_CASES)
 print(f"{total - len(failures)}/{total} cases pass")
 if failures:
     print("\n".join(failures))
