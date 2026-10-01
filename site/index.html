@@ -852,9 +852,12 @@ table.data-table tr:last-child td { border-bottom: none; }
     toggleBtn.textContent = showingTable ? "Show as chart" : "Show as table";
   });
 
-  fetch("summary.json", { cache: "no-store" })
+  // ?data=summary_emb.json views another build_dashboard.py --out file (plain names only).
+  var dataFile = new URLSearchParams(location.search).get("data") || "summary.json";
+  if (!/^[\w.-]+\.json$/.test(dataFile)) dataFile = "summary.json";
+  fetch(dataFile, { cache: "no-store" })
     .then(function (r) {
-      if (!r.ok) throw new Error("summary.json not found (" + r.status + ")");
+      if (!r.ok) throw new Error(dataFile + " not found (" + r.status + ")");
       return r.json();
     })
     .then(render)

@@ -1,0 +1,201 @@
+id,charge_type,charge_description,stratum,expected
+0,Surge Fee - Commercieel,Surge Fee - Commercieel,top,Demand / Peak Surcharge
+1,TB Express Saver,TB Express Saver,top,International / Export / Import Freight
+2,Surge Fee - Com,Surge Fee - Com,top,Demand / Peak Surcharge
+3,Look Up Amount,Look Up Amount,top,UNSURE
+4,AHS - Dimensions,AHS - Dimensions,top,Additional Handling
+5,TB Express,TB Express,top,International / Export / Import Freight
+6,Service Charge,Service Charge,top,UNSURE
+7,Early Surcharge,Early Surcharge,top,UNSURE
+8,WAITING TIME @ TENDER,WAITING TIME @ TENDER,top,Wait Time / Mileage / Toll
+9,DOCUMENT MANAGEMENT,DOCUMENT MANAGEMENT,top,Document Fee
+10,FLAT,FLAT,top,General / Mode Not Specified
+11,*** SUM *** WEIGHT & CHARGE,*** SUM *** WEIGHT & CHARGE,top,General / Mode Not Specified
+12,Addl. Handling weight,Addl. Handling weight,top,Additional Handling
+13,Residentieel,Residentieel,top,Residential Delivery/Surcharge
+14,org. Terminal Handling-Forwarder - Greater of (Min,org. Terminal Handling-Forwarder - Greater of (Min,top,Additional Handling;Package Handling / Storage
+15,Adrescorrectie TB Express Saver,Adrescorrectie TB Express Saver,top,Address Correction
+16,ISS,ISS,top,Security Surcharge
+17,SECURITY FEE,SECURITY FEE,top,Security Surcharge
+18,Surge Fee - Particulier,Surge Fee - Particulier,top,Demand / Peak Surcharge
+19,WAITING TIME @ PU,WAITING TIME @ PU,top,Wait Time / Mileage / Toll
+20,WAITING TIME,WAITING TIME,top,Wait Time / Mileage / Toll
+21,Document Processing Fee,Document Processing Fee,top,Document Fee
+22,QST,QST,top,GST / HST;Sales / General Tax
+23,Remote Area Surcharge,Remote Area Surcharge,top,Delivery Area Surcharge (DAS)
+24,Metro,Metro,top,Delivery Area Surcharge (DAS)
+25,org. Temp. Control Handling,org. Temp. Control Handling,top,Additional Handling;Package Handling / Storage
+26,ADDITIONAL HTS,ADDITIONAL HTS,top,Customs / Brokerage
+27,WAITING TIME @ RECOVERY,WAITING TIME @ RECOVERY,top,Wait Time / Mileage / Toll
+28,DELIVERY,DELIVERY,top,General / Mode Not Specified;Ground
+29,DEST DELIVERY,DEST DELIVERY,top,General / Mode Not Specified;Ground
+30,Surge Fee - Resi,Surge Fee - Resi,top,Demand / Peak Surcharge
+31,Minimum Charge,Minimum Charge,top,General / Mode Not Specified;Ground
+32,Accessorial,Destination Terminal Handling,top,Additional Handling;Package Handling / Storage
+33,Accessorial,Origin Documentation Fee,top,Document Fee
+34,REMOTE AREA DELIVERY,REMOTE AREA DELIVERY,top,Delivery Area Surcharge (DAS)
+35,Accessorial,Origin Terminal Handling,top,Additional Handling;Package Handling / Storage
+36,Dest. Terminal Handling-Forwarder - Greater of (Min,Dest. Terminal Handling-Forwarder - Greater of (Min,top,Additional Handling;Package Handling / Storage
+37,FreightCharge,FreightCharge,top,General / Mode Not Specified
+38,WEEKEND SURCHARGE,WEEKEND SURCHARGE,top,Saturday / After Hours / Holiday
+39,PARKING FEES,PARKING FEES,top,Wait Time / Mileage / Toll
+40,MILIEU BIJDRAGE,MILIEU BIJDRAGE,top,Sustainability / Carbon Fee
+41,Additional Piece Fee,Additional Piece Fee,top,Additional Handling
+42,Credit Memo,Credit Memo,top,Credit From Carrier
+43,Large Package Surcharge Comm - Length,Large Package Surcharge Comm - Length,top,Additional Handling
+44,DOCUMENT INTEGRITY,DOCUMENT INTEGRITY,top,Document Fee
+45,SYMPHONY - VISIBILITY,SYMPHONY - VISIBILITY,top,UNSURE
+46,Origin Handling Fee,Origin Handling Fee,top,Additional Handling;Package Handling / Storage
+47,Airline Transfer Fee,Airline Transfer Fee,top,Air Freight
+48,Standard,Standard,top,Ground;International / Export / Import Freight
+49,Dom. Express Saver,Dom. Express Saver,top,Air Freight;General / Mode Not Specified
+50,Security Ssurcharge - Greater of (Min Rate EUR 0;10;,Security Ssurcharge - Greater of (Min Rate EUR 0;10;,top,Security Surcharge
+51,AHS - Weight,AHS - Weight,top,Additional Handling
+52,PACKING SUPPLIES,PACKING SUPPLIES,top,Package Handling / Storage
+53,Origin Transfer Fee,Origin Transfer Fee,top,Air Freight;General / Mode Not Specified
+54,Accessorial,DMS GOVT AIRPORT MINE GAS OIL DLVRY,top,Delivery Area Surcharge (DAS)
+55,IMP/A TERMINAL HNDLG,IMP/A TERMINAL HNDLG,top,Additional Handling;Package Handling / Storage
+56,BTF2,BTF2,top,UNSURE
+57,PI CKUP,PI CKUP,top,Pickup Service
+58,Handling charges,Handling charges,top,Additional Handling;Package Handling / Storage
+59,MOBILITY PACKAGE,MOBILITY PACKAGE,top,UNSURE
+60,Weekly Printer Service Fee,Weekly Printer Service Fee,top,UNSURE
+61,Accessorial,NWCARBEA SURCHARGE,top,Delivery Area Surcharge (DAS)
+62,T/C,T/C,top,UNSURE
+63,PHARMA CHECK FEE,PHARMA CHECK FEE,top,UNSURE
+64,Large Package Surcharge - Length + Girth,Large Package Surcharge - Length + Girth,top,Additional Handling
+65,Weekend Charge,Weekend Charge,top,Saturday / After Hours / Holiday
+66,ATRLINE PHARMA FEE,ATRLINE PHARMA FEE,top,UNSURE
+67,WEEKLY PRINTER SERVICE FEE,WEEKLY PRINTER SERVICE FEE,top,UNSURE
+68,Dest. Administrative Handling,Dest. Administrative Handling,top,UNSURE
+69,Special Express Clearance,Special Express Clearance,top,Customs / Brokerage
+70,ADDL LINE FEE,ADDL LINE FEE,top,Customs / Brokerage
+71,Billing Credit for  W/E 06/14/2025,Billing Credit for  W/E 06/14/2025,top,Billing Adjustment / Correction;Credit From Carrier
+72,Pharma check,Pharma check,top,UNSURE
+73,PU AND HOLD,PU AND HOLD,top,Pickup Service
+74,TRANSPORTATION COORD,TRANSPORTATION COORD,top,General / Mode Not Specified
+75,1SS,1SS,top,Security Surcharge
+76,Special DL,Special DL,top,UNSURE
+77,ADDITIONAL CLASSIFICATIONS,ADDITIONAL CLASSIFICATIONS,top,Customs / Brokerage
+78,[SS,[SS,top,Security Surcharge
+79,DELIVERY CHARGE,DELIVERY CHARGE,top,General / Mode Not Specified;Ground
+80,Original Invoice Amount,Original Invoice Amount,top,UNSURE
+81,ZONE ADJUSTMENT Addl. Handling weight,ZONE ADJUSTMENT Addl. Handling weight,top,Additional Handling;Billing Adjustment / Correction
+82,TERMI NAL CHARGE,TERMI NAL CHARGE,top,Additional Handling;Package Handling / Storage
+83,KA,KA,top,UNSURE
+84,Origin Documentation Fee,Origin Documentation Fee,top,Document Fee
+85,**%* SUM *** WEIGHT & CHARGE,**%* SUM *** WEIGHT & CHARGE,top,General / Mode Not Specified
+86,ADDL INVOICE,ADDL INVOICE,top,Customs / Brokerage;Document Fee
+87,Waste disposal,Waste disposal,top,UNSURE
+88,DOC,DOC,top,Document Fee
+89,w/C,w/C,top,UNSURE
+90,Filler Only Pkg SM,Filler Only Pkg SM,top,Package Handling / Storage
+91,TB Express Saver Aanpassing,TB Express Saver Aanpassing,top,Billing Adjustment / Correction;International / Export / Import Freight
+92,FINAL DELIVERY,FINAL DELIVERY,top,General / Mode Not Specified;Ground
+93,RECOVER AND HOLD,RECOVER AND HOLD,top,Package Handling / Storage;Pickup Service
+94,TERMINAL HANDLING CHARGE-ORIG,TERMINAL HANDLING CHARGE-ORIG,top,Additional Handling;Package Handling / Storage
+95,Warehouse Fees,Warehouse Fees,top,Package Handling / Storage
+96,Processing Fee,Processing Fee,top,UNSURE
+97,Revalidation - Service Fee,Revalidation - Service Fee,top,UNSURE
+98,Accessorial,GUARANTEED BY 5PM 000000|005000,top,UNSURE
+99,W&I FEE,W&I FEE,top,Billing Adjustment / Correction
+100,Fix time frame,Fix time frame,top,Appointment / Notification
+101,Handling Fee,Handling Fee,top,Additional Handling;Package Handling / Storage
+102,FORWARDING FEES,FORWARDING FEES,top,Customs / Brokerage;General / Mode Not Specified
+103,TONU,TONU,top,Cancellation Fee
+104,Admin. Correction/handling,Admin. Correction/handling,top,Billing Adjustment / Correction
+105,Accessorial,Destination Transfer Fee,top,Air Freight;General / Mode Not Specified
+106,Terminal Fees,Terminal Fees,top,Additional Handling;Package Handling / Storage
+107,HANDLING,HANDLING,top,Additional Handling;Package Handling / Storage
+108,ADDITIONAL INVOICES,ADDITIONAL INVOICES,top,Customs / Brokerage;Document Fee
+109,Special Services,Special Services,top,UNSURE
+110,CHC,CHC,top,UNSURE
+111,Handling charges cold chain 2-8,Handling charges cold chain 2-8,top,Additional Handling;Package Handling / Storage
+112,DESTINATIONCHARGES,DESTINATIONCHARGES,top,UNSURE
+113,DOCS,DOCS,top,Document Fee
+114,P/U,P/U,top,Pickup Service
+115,Seafreight 40' high,Seafreight 40' high,top,Ocean Freight
+116,WEEKEND SURCHARGE PU,WEEKEND SURCHARGE PU,top,Saturday / After Hours / Holiday
+117,Reclass,Reclass,top,Billing Adjustment / Correction
+118,Express,Express,top,Air Freight;International / Export / Import Freight
+119,TERMINAL HANDLING,TERMINAL HANDLING,top,Additional Handling;Package Handling / Storage
+120,RESTRICTED DESTINATION,RESTRICTED DESTINATION,top,Delivery Area Surcharge (DAS)
+121,org. Administrative Handling,org. Administrative Handling,top,UNSURE
+122,TB Standard Undeliverable Return,TB Standard Undeliverable Return,top,Returns / Print Label Fee
+123,Accessorial,Destination Warehouse Services,top,Package Handling / Storage
+124,Accessorial,RDC REMOTE DELIVERY CHARGE Tier- 1,top,Delivery Area Surcharge (DAS)
+125,Handling,Handling,top,Additional Handling;Package Handling / Storage
+126,ELEVATED RISK,ELEVATED RISK,top,Security Surcharge
+127,Standard Shipment,Standard Shipment,top,Ground;International / Export / Import Freight
+128,CSA FEE,CSA FEE,top,UNSURE
+129,Accessorial 1,MERCHANDISE PROCESS,top,Customs / Brokerage
+130,PREPULL,PREPULL,top,Ocean Freight
+131,Pick & Hold Car,Pick & Hold Car,top,Pickup Service
+132,Order Lane Charge,Order Lane Charge,top,UNSURE
+133,Late Payment Fee,Late Payment Fee,top,UNSURE
+134,Deplayment Tools,Deplayment Tools,top,UNSURE
+135,PROACTIVE RESPONSE VOLUME,PROACTIVE RESPONSE VOLUME,top,UNSURE
+136,Addl. Handling longest side,Addl. Handling longest side,top,Additional Handling
+137,India MH CGST,India MH CGST,top,GST / HST;Sales / General Tax
+138,CERTIFICATE,CERTIFICATE,top,Customs / Brokerage;Document Fee
+139,MILEAGE,MILEAGE,top,Wait Time / Mileage / Toll
+140,Cross Border/Homeland Security Fee,Cross Border/Homeland Security Fee,top,Customs / Brokerage;Security Surcharge
+141,India MH SGST,India MH SGST,top,GST / HST;Sales / General Tax
+142,GUR XPO GUARANTEED!,GUR XPO GUARANTEED!,top,UNSURE
+143,VGM/SOLAS Fee,VGM/SOLAS Fee,top,Document Fee;Ocean Freight
+144,Adrescorrectie TB Express,Adrescorrectie TB Express,top,Address Correction
+145,Uncrate & Debris Removal,Uncrate & Debris Removal,top,Additional Handling
+146,Origin Terminal Handling Charge,Origin Terminal Handling Charge,top,Additional Handling;Package Handling / Storage
+147,HANDLING FEE,HANDLING FEE,top,Additional Handling;Package Handling / Storage
+148,SAF Contribution Charge,SAF Contribution Charge,top,Sustainability / Carbon Fee
+149,Accessorial 4,CLEARANCE PROCESSING,top,Customs / Brokerage
+150,NWCARBRBOR BEYOND CHARGE,NWCARBRBOR BEYOND CHARGE,tail,Delivery Area Surcharge (DAS)
+151,OPERATIVE CHARGES,OPERATIVE CHARGES,tail,UNSURE
+152,ADVANCES,ADVANCES,tail,Disbursement Fee
+153,Tributary Whs. Ins. Recovery,Tributary Whs. Ins. Recovery,tail,UNSURE
+154,Filler - Fragile Small,Filler - Fragile Small,tail,Package Handling / Storage
+155,Opslag kosten,Opslag kosten,tail,Package Handling / Storage
+156,Origin Terminal Handling,Origin Terminal Handling,tail,Additional Handling;Package Handling / Storage
+157,CABLE C60,CABLE C60,tail,LTL Freight (Commodity Line)
+158,Pkg Hndlng Fee 1.1-10 lbs,Pkg Hndlng Fee 1.1-10 lbs,tail,Package Handling / Storage
+159,Security Fee,Security Fee,tail,Security Surcharge
+160,PRESSSURE CHAMBER L124,PRESSSURE CHAMBER L124,tail,LTL Freight (Commodity Line)
+161,DTW ICE PACK STOAGE,DTW ICE PACK STOAGE,tail,Package Handling / Storage
+162,Gym Equipment,Gym Equipment,tail,LTL Freight (Commodity Line)
+163,Origin Terminal Fee 0;00,Origin Terminal Fee 0;00,tail,Additional Handling;Package Handling / Storage
+164,99948958-234280,99948958-234280,tail,UNSURE
+165,Accessorial,**=TO REMOTE ACCESS AREA - TABLE B=,tail,Delivery Area Surcharge (DAS)
+166,UN 1760; CORROSIVE LIQUID; N.O.S. (CONTA,UN 1760; CORROSIVE LIQUID; N.O.S. (CONTA,tail,LTL Freight (Commodity Line)
+167,Wrongly taxed costs,Wrongly taxed costs,tail,Billing Adjustment / Correction;Sales / General Tax
+168,Pick-Up Truck Ops Carrier,Pick-Up Truck Ops Carrier,tail,Pickup Service
+169,GAS MEASUREMENT,GAS MEASUREMENT,tail,UNSURE
+170,FREE DOMICILE CHARGE,FREE DOMICILE CHARGE,tail,Customs / Brokerage;Duty & Import Tax
+171,ADVANCE AT DESTINATION,ADVANCE AT DESTINATION,tail,Disbursement Fee
+172,Ex-works charges,Ex-works charges,tail,UNSURE
+173,Origin Handling 0;00,Origin Handling 0;00,tail,Additional Handling;Package Handling / Storage
+174,Corrected BOL,Corrected BOL,tail,Billing Adjustment / Correction;Document Fee
+175,NWCARB,NWCARB,tail,Delivery Area Surcharge (DAS)
+176,Guaranteed,Guaranteed,tail,UNSURE
+177,0004700 CORRECTION FEE PREPAID,0004700 CORRECTION FEE PREPAID,tail,Billing Adjustment / Correction
+178,SS THAN 6 1PC,SS THAN 6 1PC,tail,UNSURE
+179,ADDITIONAL STOP EWR,ADDITIONAL STOP EWR,tail,Wait Time / Mileage / Toll
+180,White Glove Service,White Glove Service,tail,Additional Handling
+181,HARDWARE 100,HARDWARE 100,tail,LTL Freight (Commodity Line)
+182,ISPS Fee,ISPS Fee,tail,Ocean Freight;Security Surcharge
+183,ADDITIONAL STOP,ADDITIONAL STOP,tail,Wait Time / Mileage / Toll
+184,TRUCKING FEE,TRUCKING FEE,tail,General / Mode Not Specified;Ground
+185,Heating Element,Heating Element,tail,LTL Freight (Commodity Line)
+186,HANDLING LETTER CREDIT/SIGHT DRAFT,HANDLING LETTER CREDIT/SIGHT DRAFT,tail,UNSURE
+187,TERMINAL FEE,TERMINAL FEE,tail,Additional Handling;Package Handling / Storage
+188,DKeErFriI CIT WGT. CHARGE 150,DKeErFriI CIT WGT. CHARGE 150,tail,General / Mode Not Specified
+189,Incubator Std.,Incubator Std.,tail,LTL Freight (Commodity Line)
+190,Dest. Administrative Handling AUD 77;00 @ 1;649888,Dest. Administrative Handling AUD 77;00 @ 1;649888,tail,UNSURE
+191,Fragile- Small Electronic Box,Fragile- Small Electronic Box,tail,Package Handling / Storage
+192,Accessorial,TO REMOTE ACCESS AREA - TABLE B,tail,Delivery Area Surcharge (DAS)
+193,Mailr Bubble10.5x15,Mailr Bubble10.5x15,tail,Package Handling / Storage
+194,Invalid Account#,Invalid Account#,tail,Billing Adjustment / Correction
+195,expedited Service,expedited Service,tail,UNSURE
+196,DIGITAL CABLE ce0,DIGITAL CABLE ce0,tail,LTL Freight (Commodity Line)
+197,POWER ADAPTER c60,POWER ADAPTER c60,tail,LTL Freight (Commodity Line)
+198,Standard- Heavy Materials,Standard- Heavy Materials,tail,UNSURE
+199,PAPERBOARD CARTONS 262 055 MIN,PAPERBOARD CARTONS 262 055 MIN,tail,LTL Freight (Commodity Line)

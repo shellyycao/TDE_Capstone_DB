@@ -8,12 +8,16 @@ site/summary.json in the exact shape site/index.html expects.
 
 Requires SUPABASE_DB_URL (see .env.example). Run from the repo root:
     python jobs/build_dashboard.py
+To preview a sandbox run of charge_type.py (see its --schema flag):
+    python jobs/build_dashboard.py --schema sandbox_yourname
 Preview:
     cd site && python -m http.server 8000
 """
 
+import argparse
 import json
 import os
+import re
 import sys
 import time
 from collections import OrderedDict
@@ -27,6 +31,18 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from taxonomy import CATCH_ALL  # noqa: E402
 
+parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+parser.add_argument("--schema", default="analytics",
+                    help="schema to read charge_categorized from (default: analytics, the shared one)")
+parser.add_argument("--out", default="summary.json",
+                    help="file name under site/ to write (default: summary.json); view another with "
+                         "http://localhost:8000/?data=<name>")
+args = parser.parse_args()
+SCHEMA = args.schema
+# The schema name is interpolated into SQL, so only allow plain identifiers.
+if not re.fullmatch(r"[a-z_][a-z0-9_]*", SCHEMA):
+    sys.exit(f"--schema must be a lowercase identifier like sandbox_yourname, got {SCHEMA!r}")
+
 load_dotenv(REPO_ROOT / ".env")
 DB_URL = os.environ.get("SUPABASE_DB_URL")
 if not DB_URL:
@@ -36,13 +52,13 @@ for prefix in ("postgres://", "postgresql://"):
         DB_URL = "postgresql+psycopg2://" + DB_URL[len(prefix):]
         break
 
-SUMMARY_PATH = REPO_ROOT / "site" / "summary.json"
+SUMMARY_PATH = REPO_ROOT / "site" / Path(args.out).name
 
 # charge_categorized labels lines with no mapping 'Unmapped'. Fold those into
 # the taxonomy catch-all (which index.html shows as "Other / Uncategorized").
 # The folding happens in a subquery so lines already classified as the
 # catch-all and 'Unmapped' lines land in the same GROUP BY bucket.
-QUERY = text("""
+QUERY = text(f"""
 SELECT major_category, subcategory,
        count(*) AS num_rows,
        coalesce(sum(charge_value), 0) AS total_value
@@ -50,7 +66,7 @@ FROM (
   SELECT CASE WHEN major_category = 'Unmapped' THEN :catch_major ELSE major_category END AS major_category,
          CASE WHEN major_category = 'Unmapped' THEN :catch_sub   ELSE subcategory    END AS subcategory,
          charge_value
-  FROM analytics.charge_categorized
+  FROM {SCHEMA}.charge_categorized
 ) t
 GROUP BY major_category, subcategory
 ORDER BY major_category, total_value DESC
@@ -61,15 +77,17 @@ SELECT {entity} AS entity,
        CASE WHEN c.major_category = 'Unmapped' THEN :catch_major ELSE c.major_category END AS major_category,
        count(*) AS num_rows,
        coalesce(sum(c.charge_value), 0) AS total_value
-FROM analytics.charge_categorized c
+FROM {schema}.charge_categorized c
 LEFT JOIN staging.shipment s ON c.shipment_id = s.shipment_id
 GROUP BY 1, 2
 ORDER BY entity, total_value DESC
 """
 
 COMPANY_QUERY = text(ENTITY_QUERY.format(
+    schema=SCHEMA,
     entity="coalesce(nullif(trim(s.client_name), ''), 'Unspecified account')"))
 CARRIER_QUERY = text(ENTITY_QUERY.format(
+    schema=SCHEMA,
     entity="coalesce(nullif(trim(s.carrier_name), ''), 'Unspecified carrier')"))
 
 # Only ship the top N in the JSON so the dashboard payload (and the
@@ -80,6 +98,7 @@ TOP_N_CARRIERS = 24
 engine = create_engine(DB_URL)
 params = {"catch_major": CATCH_ALL[0], "catch_sub": CATCH_ALL[1]}
 
+print(f"Reading {SCHEMA}.charge_categorized")
 with engine.connect() as conn:
     print("Running major/subcategory summary query...")
     rows = conn.execute(QUERY, params).fetchall()

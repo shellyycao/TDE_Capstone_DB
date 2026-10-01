@@ -1,6 +1,6 @@
 .env
 .venv
-site/summary.json
+site/summary*.json
 site/summary.example.json
 __pycache__/
 .DS_Store
