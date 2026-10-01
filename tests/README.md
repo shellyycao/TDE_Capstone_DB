@@ -1,4 +1,4 @@
-# Charge Categorization Tests (TDE_Capstone_DB)
+# Charge Categorization Tests
 
 These tests check that shipping charges are sorted into the right categories, and that the categorized data in Supabase is complete and up to date.
 
