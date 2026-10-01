@@ -144,9 +144,16 @@ CASES = [
     ("Missing PLD Fee", "Billing Adjustment / Correction"),
 ]
 
-# (charge type, description, expected subcategory): patterns anchored with ^ / $ must still
-# match the description when a generic charge type sits in front of it.
+# (charge type, description, expected subcategory). The description is matched first, so a
+# generic charge type ("Freight", "Accessorial") must not override what the description says,
+# and ^ / $ anchored patterns must see the description itself. The type still helps when the
+# description alone matches nothing.
 TYPED_CASES = [
+    ("Freight", "ITEM 116030 SUB:4 MACHINES c100", "LTL Freight (Commodity Line)"),
+    ("Freight", "SK ACTUATORS", "LTL Freight (Commodity Line)"),
+    ("Freight", "PLT NMFC 051080-06 Faucets; Bibcocks; ... 70", "LTL Freight (Commodity Line)"),
+    ("Freight", "Freight Charges", "General / Mode Not Specified"),
+    ("Freight", "This field is not yet available", "General / Mode Not Specified"),
     ("Accessorial", "TOTALS", "General / Mode Not Specified"),
     ("Accessorial", "Not Previously Billed Foo", "Billing Adjustment / Correction"),
     ("Accessorial", "Returns Label Fee", "Returns / Print Label Fee"),

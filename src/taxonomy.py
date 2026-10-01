@@ -424,31 +424,44 @@ def normalize(text):
     return str(text).lower().strip()
 
 
-def rule_classify_row(charge_type, charge_desc):
-    desc = normalize(charge_desc)
-    t = (normalize(charge_type) + " " + desc).strip()
-    if not t:
-        return None
-
-    def hit(pat):
-        # Also try the description on its own: patterns anchored with ^ / $ (e.g.
-        # "^returns", "^totals?$") would otherwise never match when a generic charge
-        # type ("Accessorial") sits in front of the description in `t`. For unanchored
-        # patterns the description is a substring of `t`, so this adds nothing.
-        return re.search(pat, t) or (desc and desc != t and re.search(pat, desc))
-
-    reviewed = REVIEWED_LABELS.get(desc or normalize(charge_type))
-    if reviewed:
-        return reviewed
+def _match_rules(text):
+    """Run PRIORITY_OVERRIDES, then TAXONOMY (+ FOREIGN_PATTERNS), then FALLBACK_RULES on `text`."""
     for pat, result in PRIORITY_OVERRIDES:
-        if hit(pat):
+        if re.search(pat, text):
             return result
     for major, subcats in TAXONOMY.items():
         for sub, patterns in subcats.items():
             for pat in patterns + FOREIGN_PATTERNS.get(sub, []):
-                if hit(pat):
+                if re.search(pat, text):
                     return (major, sub)
     for pat, result in FALLBACK_RULES:
-        if hit(pat):
+        if re.search(pat, text):
             return result
     return None
+
+
+def rule_classify_row(charge_type, charge_desc):
+    """Classify a label by its DESCRIPTION first, and only then by type + description.
+
+    The charge type is often a generic word ("Freight", "Accessorial", "Discount") that
+    says nothing about what the line is. Matched together with the description, a generic
+    type word can win a pattern on its own: "Freight | ITEM 116030 SUB:4 MACHINES c100" went
+    to General / Mode Not Specified on the word "freight" in the type, although the
+    description is plainly cargo (LTL Freight (Commodity Line)).
+
+    Rule: pass 1 matches the description alone; pass 2 -- only when pass 1 finds nothing --
+    matches "<type> <description>", so the type still helps when the description is empty
+    or says nothing ("Freight | This field is not yet available" -> General). Patterns
+    anchored with ^ / $ therefore see the description itself, not the type in front of it.
+    """
+    desc = normalize(charge_desc)
+    combined = (normalize(charge_type) + " " + desc).strip()
+    if not combined:
+        return None
+    reviewed = REVIEWED_LABELS.get(desc or normalize(charge_type))
+    if reviewed:
+        return reviewed
+    result = _match_rules(desc) if desc else None
+    if result is None and combined != desc:
+        result = _match_rules(combined)
+    return result
