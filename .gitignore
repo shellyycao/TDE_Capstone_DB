@@ -5,3 +5,4 @@ site/summary.example.json
 __pycache__/
 .DS_Store
 .pytest_cache/
+.ipynb_checkpoints/
