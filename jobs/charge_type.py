@@ -5,9 +5,12 @@ Local replacement for the Glue job in charge.py. Classification logic is
 unchanged: rule_classify_row from src/taxonomy.py first, then a TF-IDF
 char_wb 3-5 gram fallback with SIMILARITY_THRESHOLD = 0.25.
 
-Reads aggregated (charge_type, charge_description) combinations from
-staging.charge, classifies them, and replaces the contents of
-analytics.charge_mapping in a single transaction.
+Incremental: reads aggregated (charge_type, charge_description) combinations
+from staging.charge and classifies only the ones not already in
+analytics.charge_mapping, appending them. Existing rows keep their category;
+only row_count / total_value / updated_at are refreshed. To re-classify a
+label after fixing a pattern, delete its row from the mapping and re-run.
+Everything is written in a single transaction.
 
 Requires SUPABASE_DB_URL (see .env.example).
 
@@ -63,6 +66,45 @@ unique_labels = unique_labels.rename(columns={
 })
 unique_labels["row_count"] = unique_labels["row_count"].astype("int64")
 unique_labels["total_value"] = pd.to_numeric(unique_labels["total_value"], errors="coerce")
+
+# ---------------------------------------------------------------------------
+# Incremental: keep only labels that are not in the mapping yet. all_labels keeps
+# the full aggregate so counts on existing rows can be refreshed at the end.
+# ---------------------------------------------------------------------------
+all_labels = unique_labels
+with engine.connect() as conn:
+    existing = pd.read_sql(text("SELECT charge_type, charge_description FROM analytics.charge_mapping"), conn)
+existing_keys = set(zip(existing["charge_type"], existing["charge_description"]))
+is_new = [k not in existing_keys for k in zip(all_labels["Charge Type"], all_labels["Charge Description"])]
+unique_labels = all_labels[is_new].reset_index(drop=True)
+print(f"{len(all_labels):,} labels in staging.charge, {len(existing):,} already mapped, {len(unique_labels):,} new")
+
+
+def refresh_counts(conn):
+    """Update row_count / total_value / updated_at on existing mapping rows."""
+    known = all_labels[[k in existing_keys for k in zip(all_labels["Charge Type"], all_labels["Charge Description"])]]
+    if known.empty:
+        return 0
+    conn.execute(text("""
+        UPDATE analytics.charge_mapping m
+        SET row_count = v.row_count, total_value = v.total_value, updated_at = now()
+        FROM unnest(CAST(:ct AS text[]), CAST(:cd AS text[]), CAST(:rc AS bigint[]), CAST(:tv AS numeric[]))
+             AS v(charge_type, charge_description, row_count, total_value)
+        WHERE m.charge_type = v.charge_type AND m.charge_description = v.charge_description
+    """), {
+        "ct": known["Charge Type"].tolist(),
+        "cd": known["Charge Description"].tolist(),
+        "rc": [int(x) for x in known["row_count"]],
+        "tv": [None if pd.isna(x) else float(x) for x in known["total_value"]],
+    })
+    return len(known)
+
+
+if unique_labels.empty:
+    with engine.begin() as conn:
+        n = refresh_counts(conn)
+    print(f"No new labels. Refreshed counts on {n:,} existing rows.")
+    sys.exit(0)
 
 n_major = len(TAXONOMY) + 1  # + catch-all
 print(f"{n_major} major categories (incl. catch-all)")
@@ -140,8 +182,8 @@ print(f"Final coverage after TF-IDF fallback: {final_coverage * 100:.1f}% of row
 print(unique_labels["Method"].value_counts())
 
 # ---------------------------------------------------------------------------
-# Write analytics.charge_mapping: truncate + append in one transaction.
-# Never if_exists="replace" -- views depend on the table.
+# Write analytics.charge_mapping: append the new rows and refresh counts on the
+# existing ones, in one transaction. Never if_exists="replace" -- views depend on the table.
 # ---------------------------------------------------------------------------
 mapping = unique_labels.rename(columns={
     "Charge Type": "charge_type",
@@ -159,6 +201,6 @@ if dupes.any():
     raise ValueError(f"{dupes.sum()} rows violate (charge_type, charge_description) uniqueness:\n{mapping[dupes]}")
 
 with engine.begin() as conn:
-    conn.execute(text("TRUNCATE analytics.charge_mapping"))
     mapping.to_sql("charge_mapping", conn, schema="analytics", if_exists="append", index=False)
-print(f"Wrote {len(mapping):,} rows to analytics.charge_mapping")
+    n_refreshed = refresh_counts(conn)
+print(f"Appended {len(mapping):,} new rows to analytics.charge_mapping; refreshed counts on {n_refreshed:,} existing rows")
