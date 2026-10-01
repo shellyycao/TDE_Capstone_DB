@@ -4,3 +4,4 @@ site/summary*.json
 site/summary.example.json
 __pycache__/
 .DS_Store
+pytest_cache/
