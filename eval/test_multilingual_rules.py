@@ -141,6 +141,7 @@ CASES = [
     ("org. Temp. Control Handling", "Additional Handling"),
     ("Origin Handling Fee", "Additional Handling"),
     ("MILEAGE", "Wait Time / Mileage / Toll"),
+    ("Look Up Amount", "General / Mode Not Specified"),
     ("Missing PLD Fee", "Billing Adjustment / Correction"),
 ]
 

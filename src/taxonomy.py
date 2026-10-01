@@ -317,7 +317,12 @@ REVIEWED_LABELS = {
     "flat": ("Line Haul / Base Transportation", "General / Mode Not Specified"),            # flat-rate freight
     "dest delivery": ("Line Haul / Base Transportation", "General / Mode Not Specified"),
     "final delivery": ("Line Haul / Base Transportation", "General / Mode Not Specified"),
-    "78 00% olsc": ("Discounts", "General Discount"),                                        # OCR of "78.00% DISC"
+    "78 00% olsc": ("Discounts", "General Discount"),
+    # Look Up Amount: the base rate / tariff charge looked up from the carrier's rate table
+    # (weight, class, lane). Checked in the data: all 493 lines are positive, one per
+    # shipment, with no other charge on the shipment (carrier "FACTORING RATE CHECK"). Fuzzy
+    # matching had put them in General Discount. Provisional until the client confirms.
+    "look up amount": ("Line Haul / Base Transportation", "General / Mode Not Specified"),                                        # OCR of "78.00% DISC"
     # ISS: provisional, meaning still to be confirmed. 1SS / [SS are OCR variants of it
     # (same carrier).
     "iss": ("Accessorial / Delivery Surcharge", "Security Surcharge"),
