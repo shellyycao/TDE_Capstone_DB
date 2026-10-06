@@ -23,17 +23,26 @@ Tells the tests where the project is and opens the database connection.
 
 Nothing else in the project does this check. If new invoices come in and nobody runs the categorization job, the dashboard quietly shows those charges as "Other / Uncategorized", with no warning. This file catches that.
 
-**Run these tests before `jobs/build_dashboard.py`.** That way you know the numbers on the dashboard are complete and current.
+**These tests now run automatically inside `jobs/build_dashboard.py`.** If any check fails, the dashboard is not built, so its numbers are always complete and current.
 
 ## How to run
 
-In the terminal, from the folder that contains `tests/`:
+The normal workflow is two commands, from the `TDE_Capstone_DB` folder:
 
 ```
-python3 -m pytest tests/ -p no:cacheprovider
+python3 jobs/charge_type.py
+python3 jobs/build_dashboard.py
 ```
 
-`40 passed` means everything is fine. A failure names the charges involved and what to do.
+`build_dashboard.py` runs all 40 checks first. `40 passed` means the dashboard is built. If a check fails, it stops with "Checks failed - dashboard not built", and the messages above name the charges involved and what to do.
+
+Sandbox previews (`--schema sandbox_yourname`) skip the checks, because the checks always look at the shared `analytics` tables.
+
+To run the checks on their own, for example while editing category rules:
+
+```
+python3 -m pytest tests/
+```
 
 Without the `.env` file, the database tests are skipped, not failed.
 
@@ -47,4 +56,4 @@ Without the `.env` file, the database tests are skipped, not failed.
   ```
 
   Tell the team before rebuilding the shared `analytics` tables.
-
+- After fixing, run `python3 jobs/build_dashboard.py` again. It reruns the checks and builds the dashboard once they pass.
