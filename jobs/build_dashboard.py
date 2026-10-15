@@ -22,6 +22,7 @@ import sys
 import time
 from collections import OrderedDict
 from pathlib import Path
+import subprocess
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
@@ -42,6 +43,13 @@ SCHEMA = args.schema
 # The schema name is interpolated into SQL, so only allow plain identifiers.
 if not re.fullmatch(r"[a-z_][a-z0-9_]*", SCHEMA):
     sys.exit(f"--schema must be a lowercase identifier like sandbox_yourname, got {SCHEMA!r}")
+
+# Run the tests first, so the dashboard is never built from incomplete or outdated data.
+# The tests check the shared analytics tables, so sandbox previews skip them.
+if SCHEMA == "analytics":
+    result = subprocess.run([sys.executable, "-m", "pytest", str(REPO_ROOT / "tests"), "-q"])
+    if result.returncode != 0:
+        sys.exit("Checks failed - dashboard not built. Fix the issues above and run again.")
 
 load_dotenv(REPO_ROOT / ".env")
 DB_URL = os.environ.get("SUPABASE_DB_URL")
