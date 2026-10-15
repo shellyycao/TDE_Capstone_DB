@@ -79,6 +79,11 @@ TAXONOMY = {
         # "Next Day Air Commercial") are pulled out to Line Haul / Base Transportation before
         # this ever runs -- see PRIORITY_OVERRIDES.
         "Commercial / Business Delivery Surcharge": [r"\bcommercial\b"],
+        # Client-assigned only (seeds/charge_mapping_overrides.csv): the client put these
+        # one-off codes ("TONU", "KA", "BTF2", transfer / terminal fees, ...) in Accessorial
+        # without saying which kind. No patterns, so nothing else can land here and it never
+        # enters the TF-IDF corpus (see TFIDF_EXCLUDE).
+        "Other Accessorial / Special Service": [],
     },
     "Discounts": {
         "Earned Discount": [r"earned discount", r"performance pricing"],
@@ -149,6 +154,10 @@ TAXONOMY = {
         "Pickup Service": [
             r"pick ?up",
         ],
+        # Client-assigned only, same as "Other Accessorial / Special Service": the client put
+        # generic service fees ("Service Charge", "Symphony - Visibility", ...) in Admin
+        # without a more specific kind. No patterns; not in the TF-IDF corpus.
+        "General Service Fee": [],
     },
     # Ground, Air, International, and Ocean Freight are *mode* subcategories -- the raw
     # label told us which mode. "General / Mode Not Specified" is NOT a fifth mode; it's
@@ -304,6 +313,10 @@ FOREIGN_PATTERNS = {
     "General / Mode Not Specified": [
         r"\bvracht", r"\bvervoer\b",                    # NL: freight; transport
         r"\bflete\b", r"\btransporte\b",                # ES
+        # Not foreign: "LINEHAUL" / "LINE HAUL" / "Line  Haul" / "line-haul" spelling variants of the
+        # English `line ?haul` pattern (which only covers zero or one space). Here rather than in
+        # TAXONOMY because `\s*` in a TAXONOMY pattern would leak into the TF-IDF reference document.
+        r"line[\s_-]*haul",
     ],
 }
 
@@ -318,10 +331,12 @@ REVIEWED_LABELS = {
     "dest delivery": ("Line Haul / Base Transportation", "General / Mode Not Specified"),
     "final delivery": ("Line Haul / Base Transportation", "General / Mode Not Specified"),
     "78 00% olsc": ("Discounts", "General Discount"),
-    # Look Up Amount: the base rate / tariff charge looked up from the carrier's rate table
-    # (weight, class, lane). Checked in the data: all 493 lines are positive, one per
-    # shipment, with no other charge on the shipment (carrier "FACTORING RATE CHECK"). Fuzzy
-    # matching had put them in General Discount. Provisional until the client confirms.
+    # Look Up Amount: all 493 lines are positive, one per shipment, with no other charge on
+    # the shipment (carrier "FACTORING RATE CHECK"). Fuzzy matching had put them in General
+    # Discount. The client has since said these are rate lookups, not shipping cost: they are
+    # excluded at line level (analytics.charge_categorized.is_excluded) and the override seed
+    # marks the label `excluded`. This entry is only the mapping the label falls back to if
+    # that exclusion is ever lifted.
     "look up amount": ("Line Haul / Base Transportation", "General / Mode Not Specified"),                                        # OCR of "78.00% DISC"
     # ISS: provisional, meaning still to be confirmed. 1SS / [SS are OCR variants of it
     # (same carrier).
@@ -420,6 +435,9 @@ TFIDF_EXCLUDE = {
     # One known label so far; as a two-word reference doc ("customer solution") it
     # fuzzy-matched "Custody Fee" on the shared "cust". Rules only until it has more.
     ("Administrative & Service Fees", "Customer Service / Resolution Fee"),
+    # No patterns -- assigned by the client override seed only.
+    ("Accessorial / Delivery Surcharge", "Other Accessorial / Special Service"),
+    ("Administrative & Service Fees", "General Service Fee"),
 }
 
 
