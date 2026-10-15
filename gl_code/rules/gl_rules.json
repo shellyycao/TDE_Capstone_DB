@@ -1,0 +1,4655 @@
+{
+ "version": 1,
+ "created": "2026-10-09",
+ "format": {
+  "when": "list of clauses; ALL clauses must hold; each clause is a list of alternatives [column, op, value] where ANY may hold",
+  "column": "Excel column letter of the UPS file (C=account, P=ref1, Q=ref2, AJ=txn type, AM=user id, BP/BS=sender/city, BW=receiver attn, BX/CA=receiver/city, CD=country)",
+  "ops": {
+   "eq": "equals, case-insensitive",
+   "contains": "substring, case-insensitive",
+   "not_contains": "no substring match",
+   "word": "whole-word match [a-z0-9\\-.]+ tokens, case-insensitive",
+   "not_word": "negation of word"
+  },
+  "conflicts": "doc_v1: no priority is defined in the doc (evaluation used first rule in doc order). learned_*: leaves are mutually exclusive.",
+  "unmatched": "no rule fires -> no GL (evaluation filled 99999, or 353500 where noted)"
+ },
+ "rule_sets": {
+  "doc_v1": {
+   "source": "GL Code Logic.docx (Sep 29 2026), parsed from the file",
+   "fixes_applied": [
+    "TAAX->TAX",
+    "'Column CA = SO55000'->'Column P contains SO55000'",
+    "'Column BY'->'Column BX'",
+    "bare 'Column CD' -> CD = CA (per notebook notes)"
+   ],
+   "rules": {
+    "CSI": [
+     {
+      "id": "D-C01",
+      "gl": "65415-5500--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "AQ",
+         "eq",
+         "SVC"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AQ = SVC, column M = 65415-5500--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C02",
+      "gl": "65415-5500--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "AQ",
+         "eq",
+         "PRT"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AQ = PRT, column M = 65415-5500--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C03",
+      "gl": "65415-5500--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "AQ",
+         "eq",
+         "AUD"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AQ = AUD, column M = 65415-5500--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C04",
+      "gl": "65420-3000--CSI_U100-L527--",
+      "when": [
+       [
+        [
+         "AQ",
+         "eq",
+         "TAX"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AQ = TAAX, column M = 65420-3000--CSI_U100-L527--",
+      "note": null
+     },
+     {
+      "id": "D-C05",
+      "gl": "65415-8401--CSI_M100-L510--",
+      "when": [
+       [
+        [
+         "P",
+         "eq",
+         "83350-15"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P = 83350-15, column M = 65415-8401--CSI_M100-L510--",
+      "note": null
+     },
+     {
+      "id": "D-C06",
+      "gl": "65415-6000--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "P",
+         "eq",
+         "83350-60"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P = 83350-60, column M = 65415-6000--CSI_U100-L529--",
+      "note": null
+     },
+     {
+      "id": "D-C07",
+      "gl": "65415-1800--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "P",
+         "eq",
+         "83350-45"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P = 83350-45, column M = 65415-1800--CSI_U100-L529--",
+      "note": null
+     },
+     {
+      "id": "D-C08",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "P",
+         "eq",
+         "83350-46"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P = 83350-46, column M = 65415-1804--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C09",
+      "gl": "65415-5500--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "P",
+         "eq",
+         "83350-80"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P = 83350-80, column M = 65415-5500--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C10",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "AM",
+         "eq",
+         "helpdesk911"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AM = helpdesk911, column M = 65415-1804--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C11",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "AM",
+         "eq",
+         "BBryanCSI1"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AM = BBryanCSI1, column M = 65415-1804--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C12",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "AM",
+         "eq",
+         "lc963"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AM = lc963, column M = 65415-1804--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C13",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "AM",
+         "eq",
+         "mcard636"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AM = mcard636, column M = 65415-1804--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C14",
+      "gl": "65420-3000--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "AM",
+         "eq",
+         "MThomasCSI1"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AM = MThomasCSI1, column M = 65420-3000--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C15",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "AM",
+         "eq",
+         "rquin19"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AM = rquin19, column M = 65415-1804--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C16",
+      "gl": "65420-3000--CSI_U100-L528--",
+      "when": [
+       [
+        [
+         "AM",
+         "eq",
+         "Sheana Elliott"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AM = Sheana Elliott, column M = 65420-3000--CSI_U100-L528--",
+      "note": null
+     },
+     {
+      "id": "D-C17",
+      "gl": "65420-3000--CSI_U100-L528--",
+      "when": [
+       [
+        [
+         "AM",
+         "eq",
+         "TMutambayi1"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AM = TMutambayi1, column M = 65420-3000--CSI_U100-L528--",
+      "note": null
+     },
+     {
+      "id": "D-C18",
+      "gl": "65415-2000--CSI_M100-L529--",
+      "when": [
+       [
+        [
+         "AM",
+         "eq",
+         "vdh510"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AM = vdh510, column M = 65415-2000--CSI_M100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C19",
+      "gl": null,
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Cooper"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "contains",
+         "Cooper"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Cooper and Column BX contains Cooper, column M = Cooper to Cooper",
+      "note": "output is a label, not a GL code; never assigned"
+     },
+     {
+      "id": "D-C20",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "BW",
+         "contains",
+         "repair"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BW contains repair, column M = 65415-1804--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C21",
+      "gl": "65420-3000--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "BW",
+         "contains",
+         "RMA"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BW contains RMA, column M = 65420-3000--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C22",
+      "gl": "65420-3000--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "BW",
+         "contains",
+         "Returns"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BW contains Returns, column M = 65420-3000--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C23",
+      "gl": "65420-3000--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "BW",
+         "contains",
+         "Complaint"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BW contains Complaint, column M = 65420-3000--CSI_U100-L529--",
+      "note": null
+     },
+     {
+      "id": "D-C24",
+      "gl": "51630-1000--CSI_M100-L510--",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Cooper"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "contains",
+         "Trumb"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "contains",
+         "Cooper"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Alajuela"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Cooper and Column BS contains Trumb and Column BX contains Cooper and Column CA contains Alajuela, column M = 51630-1000--CSI_M100-L510\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C25",
+      "gl": "51630-1000--CSI_M100-L510--",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Cooper"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "contains",
+         "Worth"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "contains",
+         "Cooper"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Alajuela"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Cooper and Column BS contains Worth and Column BX contains Cooper and Column CA contains Alajuela, column M = 51630-1000--CSI_M100-L510\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C26",
+      "gl": "65440-8401--CSI_P100-L551--",
+      "when": [
+       [
+        [
+         "CA",
+         "contains",
+         "Tonawanda"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_contains",
+         "Cooper"
+        ]
+       ]
+      ],
+      "doc_line": "If Column CA contains Tonawanda and Column BP does not contain Cooper, column M = 65440-8401--CSI_P100-L551\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C27",
+      "gl": "65440-8401--CSI_M100-L560--",
+      "when": [
+       [
+        [
+         "CA",
+         "contains",
+         "Sugar Land"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_contains",
+         "Cooper"
+        ]
+       ]
+      ],
+      "doc_line": "If Column CA contains Sugar Land and Column BP does not contain Cooper, column M = 65440-8401--CSI_M100-L560--",
+      "note": null
+     },
+     {
+      "id": "D-C28",
+      "gl": "65420-3000--CSI_U100-L527--",
+      "when": [
+       [
+        [
+         "C",
+         "eq",
+         "0000H4B189"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "eq",
+         "CA"
+        ]
+       ]
+      ],
+      "doc_line": "If Column C = 0000H4B189 and Column CD = CA, column M = 65420-3000--CSI_U100-L527\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C29",
+      "gl": "65420-3000--CSI_U100-L527--",
+      "when": [
+       [
+        [
+         "C",
+         "eq",
+         "0000H93A28"
+        ]
+       ]
+      ],
+      "doc_line": "If Column C = 0000H93A28, column M = 65420-3000--CSI_U100-L527--",
+      "note": null
+     },
+     {
+      "id": "D-C30",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "BW",
+         "contains",
+         "help desk"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BW contains help desk, column M = 65415-1804--CSI_U100-L529--",
+      "note": null
+     },
+     {
+      "id": "D-C31",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "BW",
+         "contains",
+         "IT Dep"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BW contains IT Dep, column M = 65415-1804--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C32",
+      "gl": "65415-1804--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "BW",
+         "contains",
+         "IT Dep"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BW contains IT Dep, column M = 65415-1804--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C33",
+      "gl": "65440-8401--CSI_M100-L510--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "550-0"
+        ],
+        [
+         "Q",
+         "contains",
+         "550-0"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Trumb"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P or Column Q contains 550-0 and Column CA contains Trumb, column M = 65440-8401--CSI_M100-L510\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C34",
+      "gl": "65440-8401--CSI_M100-L562--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "550-0"
+        ],
+        [
+         "Q",
+         "contains",
+         "550-0"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Staff"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P or Column Q contains 550-0 and Column CA contains Staff, column M = 65440-8401--CSI_M100-L562\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C35",
+      "gl": "65440-8401--CSI_M100-L510--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "550-0"
+        ],
+        [
+         "Q",
+         "contains",
+         "550-0"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Worth"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P or Column Q contains 550-0 and Column CA contains Worth, column M = 65440-8401--CSI_M100-L510\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C36",
+      "gl": "65415-1800--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "Complaints"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains Complaints, column M = 65415-1800--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C37",
+      "gl": "65415-1800--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "Recall"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains Recall, column M = 65415-1800--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C38",
+      "gl": "65415-8440--CSI_M100-L510--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "QA Dept"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains QA Dept, column M = 65415-8440--CSI_M100-L510--",
+      "note": null
+     },
+     {
+      "id": "D-C39",
+      "gl": "65420-3000--CSI_U100-L528--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "SO55000"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Trumb"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_contains",
+         "Cooper"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains SO55000 and Column CA contains Trumb and Column BX does not contain Cooper, column M = 65420-3000--CSI_U100-L528\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C40",
+      "gl": "65420-3000--CSI_U100-L527--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "SO55000"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Worth"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_contains",
+         "Cooper"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains SO55000 and Column CA contains Worth and Column BX does not contain Cooper, column M = 65420-3000--CSI_U100-L527\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C41",
+      "gl": "65415-2113--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Lynn Sales"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Lynn Sales, column M = 65415-2113--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C42",
+      "gl": "65415-2113--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "BX",
+         "contains",
+         "Lynn Sales"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BX contains Lynn Sales, column M = 65415-2113--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C43",
+      "gl": "51630-1000--CSI_M100-L510--",
+      "when": [
+       [
+        [
+         "CA",
+         "contains",
+         "Herten"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "contains",
+         "Cooper"
+        ]
+       ]
+      ],
+      "doc_line": "If Column CA contains Herten and Column BP contains Cooper, column M = 51630-1000--CSI_M100-L510\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C44",
+      "gl": "65420-3000--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "SO55000"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Antonio"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_contains",
+         "Cooper"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains SO55000 and Column CA contains Antonio and Column BX does not contain Cooper, column M = 65420-3000--CSI_U100-L529\u2014",
+      "note": null
+     },
+     {
+      "id": "D-C45",
+      "gl": "65420-3000--CSI_U100-L529--",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "SO55000"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Antonio"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_contains",
+         "Cooper"
+        ]
+       ]
+      ],
+      "doc_line": "If Column CA =  SO55000 and Column CA contains Antonio and Column BX does not contain Cooper, column M = 65420-3000--CSI_U100-L529--",
+      "note": null
+     }
+    ],
+    "Belimo": [
+     {
+      "id": "D-B01",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "C",
+         "contains",
+         "9V1790"
+        ]
+       ]
+      ],
+      "doc_line": "If Column C contains 9V1790, column M = 356200",
+      "note": null
+     },
+     {
+      "id": "D-B02",
+      "gl": "367211",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "sample"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains sample, column M = 367211",
+      "note": null
+     },
+     {
+      "id": "D-B23",
+      "gl": "367210",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "contains",
+         "promo"
+        ]
+       ]
+      ],
+      "doc_line": null,
+      "note": "added: Trade + Promo together = 367210 (not in doc; must stay above D-B03 and D-B05)"
+     },
+     {
+      "id": "D-B03",
+      "gl": "367400",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "Trade"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains Trade, column M = 367400",
+      "note": null
+     },
+     {
+      "id": "D-B04",
+      "gl": "367230",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "Lit"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains Lit, column M = 367230",
+      "note": null
+     },
+     {
+      "id": "D-B05",
+      "gl": "367230",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "Promo"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains Promo, column M = 367230",
+      "note": null
+     },
+     {
+      "id": "D-B06",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "RMA"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains RMA, column M = 353590",
+      "note": null
+     },
+     {
+      "id": "D-B07",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "P",
+         "contains",
+         "2-10"
+        ]
+       ]
+      ],
+      "doc_line": "If Column P contains 2-10, column M = 367230",
+      "note": "edited: doc said 367230; answer key codes 2-10xxxx RMA numbers as 353590"
+     },
+     {
+      "id": "D-B08",
+      "gl": "369600",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Imprint"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "contains",
+         "Oshkosh"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Imprint and Column BS contains Oshkosh, column M = 369600",
+      "note": null
+     },
+     {
+      "id": "D-B09",
+      "gl": "369600",
+      "when": [
+       [
+        [
+         "BX",
+         "contains",
+         "Imprint"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Oshkosh"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BY contains Imprint and Column CA contains Oshkosh, column M = 369600",
+      "note": null
+     },
+     {
+      "id": "D-B10",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "contains",
+         "Danbury"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Sparks"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Belimo and Column BS contains Danbury and Column BX contains Belimo and Column CA contains Sparks, column M = 356205",
+      "note": null
+     },
+     {
+      "id": "D-B11",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "contains",
+         "Sparks"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Danbury"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Belimo and Column BS contains Sparks and Column BX contains Belimo and Column CA contains Danbury, column M = 356205",
+      "note": null
+     },
+     {
+      "id": "D-B12",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Warren"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "contains",
+         "Bethlehem"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Danbury"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Warren and Column BS contains Bethlehem and Column BX contains Belimo and Column CA contains Danbury, column M = 356205",
+      "note": null
+     },
+     {
+      "id": "D-B13",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Warren"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "contains",
+         "Bethlehem"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Sparks"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Warren and Column BS contains Bethlehem and Column BX contains Belimo and Column CA contains Sparks, column M = 356205",
+      "note": null
+     },
+     {
+      "id": "D-B14",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "contains",
+         "Danbury"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "contains",
+         "Warren"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Bethlehem"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Belimo and Column BS contains Danbury and Column BX contains Warren and Column CA contains Bethlehem, column M = 356205",
+      "note": null
+     },
+     {
+      "id": "D-B15",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BP",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "contains",
+         "Sparks"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "contains",
+         "Warren"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Bethlehem"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BP contains Belimo and Column BS contains Sparks and Column BX contains Warren and Column CA contains Bethlehem, column M = 356205",
+      "note": null
+     },
+     {
+      "id": "D-B16",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Danbury"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_contains",
+         "Warren"
+        ],
+        [
+         "BP",
+         "not_contains",
+         "Belimo"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BX contains Belimo and Column CA contains Danbury and Column BP does not contain Warren or Column BP does not contain Belimo, column M = 356200",
+      "note": null
+     },
+     {
+      "id": "D-B17",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Sparks"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_contains",
+         "Warren"
+        ],
+        [
+         "BP",
+         "not_contains",
+         "Belimo"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BX contains Belimo and Column CA contains Sparks and Column BP does not contain Warren or Column BP does not contain Belimo, column M = 356200",
+      "note": null
+     },
+     {
+      "id": "D-B18",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "contains",
+         "Warren"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Bethlehem"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_contains",
+         "Warren"
+        ],
+        [
+         "BP",
+         "not_contains",
+         "Belimo"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BX contains Warren and Column CA contains Bethlehem and Column BP does not contain Warren or Column BP does not contain Belimo, column M = 356200",
+      "note": null
+     },
+     {
+      "id": "D-B19",
+      "gl": "353550",
+      "when": [
+       [
+        [
+         "BX",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Danbury"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_contains",
+         "Warren"
+        ],
+        [
+         "BP",
+         "not_contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "eq",
+         "CA"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BX contains Belimo and Column CA contains Danbury and Column BP does not contain Warren or Column BP does not contain Belimo and Column CD, column M = 353550",
+      "note": null
+     },
+     {
+      "id": "D-B20",
+      "gl": "353550",
+      "when": [
+       [
+        [
+         "BX",
+         "contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Sparks"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_contains",
+         "Warren"
+        ],
+        [
+         "BP",
+         "not_contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "eq",
+         "CA"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BX contains Belimo and Column CA contains Sparks and Column BP does not contain Warren or Column BP does not contain Belimo and Column CD, column M = 353550",
+      "note": null
+     },
+     {
+      "id": "D-B21",
+      "gl": "353550",
+      "when": [
+       [
+        [
+         "BX",
+         "contains",
+         "Warren"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "contains",
+         "Bethlehem"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_contains",
+         "Warren"
+        ],
+        [
+         "BP",
+         "not_contains",
+         "Belimo"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "eq",
+         "CA"
+        ]
+       ]
+      ],
+      "doc_line": "If Column BX contains Warren and Column CA contains Bethlehem and Column BP does not contain Warren or Column BP does not contain Belimo and Column CD, column M = 353550",
+      "note": null
+     },
+     {
+      "id": "D-B22",
+      "gl": "353500",
+      "when": [
+       [
+        [
+         "AJ",
+         "contains",
+         "ADC"
+        ]
+       ]
+      ],
+      "doc_line": "If Column AJ contains ADC, column M = 353500",
+      "note": null
+     }
+    ]
+   },
+   "edits_after_doc": [
+    "Belimo D-B07: 2-10 -> 353590 (doc said 367230)",
+    "Belimo D-B23 added: Trade + Promo -> 367210, placed above D-B03/D-B05",
+    "NOT added: BW contains Marissa -> 369600 (left out on purpose; not in the doc, to confirm with the doc owner)"
+   ]
+  },
+  "learned_belimo_db_cols": {
+   "source": "decision tree trained on UPS GL Code Logic Completed_Belimo_100226.csv",
+   "trained_on_rows": 8705,
+   "columns_used": [
+    "C",
+    "P",
+    "Q",
+    "BP",
+    "BS",
+    "BX",
+    "CA",
+    "CD"
+   ],
+   "params": {
+    "max_depth": 10,
+    "min_samples_leaf": 5,
+    "token_min_df": 5
+   },
+   "rules": {
+    "Belimo": [
+     {
+      "id": "LDB-01",
+      "gl": "353500",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "4imprint"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "motivair"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "not_word",
+         "ca"
+        ]
+       ],
+       [
+        [
+         "Q",
+         "not_word",
+         "68393049"
+        ]
+       ]
+      ],
+      "support": 7965,
+      "purity": 0.99
+     },
+     {
+      "id": "LDB-02",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "4imprint"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "motivair"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "not_word",
+         "ca"
+        ]
+       ],
+       [
+        [
+         "Q",
+         "word",
+         "68393049"
+        ]
+       ]
+      ],
+      "support": 6,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-03",
+      "gl": "353550",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "4imprint"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "motivair"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "word",
+         "ca"
+        ]
+       ]
+      ],
+      "support": 7,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-04",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "4imprint"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "word",
+         "motivair"
+        ]
+       ]
+      ],
+      "support": 8,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-05",
+      "gl": "369600",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "4imprint"
+        ]
+       ]
+      ],
+      "support": 10,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-06",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "2-10"
+        ]
+       ]
+      ],
+      "support": 12,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-07",
+      "gl": "367400",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "not_word",
+         "los"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "lit"
+        ]
+       ]
+      ],
+      "support": 17,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-08",
+      "gl": "367230",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "not_word",
+         "los"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "lit"
+        ]
+       ]
+      ],
+      "support": 6,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-09",
+      "gl": "367210",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "word",
+         "los"
+        ]
+       ]
+      ],
+      "support": 13,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-10",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "rma"
+        ]
+       ]
+      ],
+      "support": 36,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-11",
+      "gl": "367211",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "samples"
+        ]
+       ]
+      ],
+      "support": 52,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-12",
+      "gl": "367211",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "sample"
+        ]
+       ]
+      ],
+      "support": 90,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-13",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "bethlehem"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "po"
+        ]
+       ],
+       [
+        [
+         "C",
+         "not_word",
+         "97644"
+        ]
+       ]
+      ],
+      "support": 55,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-14",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "bethlehem"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "po"
+        ]
+       ],
+       [
+        [
+         "C",
+         "word",
+         "97644"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "wurth"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "tag"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "line"
+        ]
+       ]
+      ],
+      "support": 53,
+      "purity": 0.868
+     },
+     {
+      "id": "LDB-15",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "bethlehem"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "po"
+        ]
+       ],
+       [
+        [
+         "C",
+         "word",
+         "97644"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "wurth"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "tag"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "line"
+        ]
+       ]
+      ],
+      "support": 18,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-16",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "bethlehem"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "po"
+        ]
+       ],
+       [
+        [
+         "C",
+         "word",
+         "97644"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "wurth"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "tag"
+        ]
+       ]
+      ],
+      "support": 27,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-17",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "bethlehem"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "po"
+        ]
+       ],
+       [
+        [
+         "C",
+         "word",
+         "97644"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "wurth"
+        ]
+       ]
+      ],
+      "support": 36,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-18",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "bethlehem"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "po"
+        ]
+       ]
+      ],
+      "support": 76,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-19",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "word",
+         "bethlehem"
+        ]
+       ]
+      ],
+      "support": 6,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-20",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "rma"
+        ]
+       ]
+      ],
+      "support": 8,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-21",
+      "gl": "369600",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "word",
+         "oshkosh"
+        ]
+       ]
+      ],
+      "support": 56,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-22",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "not_word",
+         "us"
+        ]
+       ]
+      ],
+      "support": 27,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-23",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "word",
+         "us"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "danbury"
+        ]
+       ]
+      ],
+      "support": 18,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-24",
+      "gl": "369600",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "word",
+         "us"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "word",
+         "danbury"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "not_word",
+         "sparks"
+        ]
+       ]
+      ],
+      "support": 8,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-25",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "word",
+         "us"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "word",
+         "danbury"
+        ]
+       ],
+       [
+        [
+         "CA",
+         "word",
+         "sparks"
+        ]
+       ]
+      ],
+      "support": 10,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-26",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "us"
+        ]
+       ]
+      ],
+      "support": 9,
+      "purity": 1.0
+     },
+     {
+      "id": "LDB-27",
+      "gl": "369600",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "word",
+         "us"
+        ]
+       ]
+      ],
+      "support": 76,
+      "purity": 0.803
+     }
+    ]
+   }
+  },
+  "learned_belimo_all_cols": {
+   "source": "same file, also uses AJ, AM, BW (not testable on the DB)",
+   "trained_on_rows": 8705,
+   "columns_used": [
+    "C",
+    "P",
+    "Q",
+    "AJ",
+    "AM",
+    "BP",
+    "BS",
+    "BW",
+    "BX",
+    "CA",
+    "CD"
+   ],
+   "params": {
+    "max_depth": 10,
+    "min_samples_leaf": 5,
+    "token_min_df": 5
+   },
+   "rules": {
+    "Belimo": [
+     {
+      "id": "LALL-01",
+      "gl": "353500",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "4imprint"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "motivair"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "wws"
+        ]
+       ],
+       [
+        [
+         "Q",
+         "not_word",
+         "68393049"
+        ]
+       ]
+      ],
+      "support": 7965,
+      "purity": 0.99
+     },
+     {
+      "id": "LALL-02",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "4imprint"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "motivair"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "wws"
+        ]
+       ],
+       [
+        [
+         "Q",
+         "word",
+         "68393049"
+        ]
+       ]
+      ],
+      "support": 6,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-03",
+      "gl": "353550",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "4imprint"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "motivair"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "word",
+         "wws"
+        ]
+       ]
+      ],
+      "support": 7,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-04",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "4imprint"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "word",
+         "motivair"
+        ]
+       ]
+      ],
+      "support": 8,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-05",
+      "gl": "369600",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "2-10"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "4imprint"
+        ]
+       ]
+      ],
+      "support": 10,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-06",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "2-10"
+        ]
+       ]
+      ],
+      "support": 12,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-07",
+      "gl": "367400",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "nicole"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "lit"
+        ]
+       ]
+      ],
+      "support": 17,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-08",
+      "gl": "367230",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "nicole"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "lit"
+        ]
+       ]
+      ],
+      "support": 6,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-09",
+      "gl": "367210",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "trade"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "word",
+         "nicole"
+        ]
+       ]
+      ],
+      "support": 13,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-10",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "samples"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "rma"
+        ]
+       ]
+      ],
+      "support": 36,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-11",
+      "gl": "367211",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "sample"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "samples"
+        ]
+       ]
+      ],
+      "support": 52,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-12",
+      "gl": "367211",
+      "when": [
+       [
+        [
+         "BX",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "sample"
+        ]
+       ]
+      ],
+      "support": 90,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-13",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "controls"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "llc"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "tp"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "imp"
+        ]
+       ]
+      ],
+      "support": 26,
+      "purity": 0.846
+     },
+     {
+      "id": "LALL-14",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "controls"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "llc"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "tp"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "word",
+         "imp"
+        ]
+       ]
+      ],
+      "support": 14,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-15",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "controls"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "llc"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "word",
+         "tp"
+        ]
+       ],
+       [
+        [
+         "Q",
+         "not_word",
+         "09"
+        ]
+       ]
+      ],
+      "support": 6,
+      "purity": 0.5
+     },
+     {
+      "id": "LALL-16",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "controls"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "llc"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "word",
+         "tp"
+        ]
+       ],
+       [
+        [
+         "Q",
+         "word",
+         "09"
+        ]
+       ]
+      ],
+      "support": 6,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-17",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "controls"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "llc"
+        ]
+       ]
+      ],
+      "support": 20,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-18",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "rma"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "controls"
+        ]
+       ]
+      ],
+      "support": 6,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-19",
+      "gl": "353590",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "not_word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "rma"
+        ]
+       ]
+      ],
+      "support": 8,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-20",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "scc"
+        ]
+       ],
+       [
+        [
+         "AM",
+         "not_word",
+         "belimoserp"
+        ]
+       ]
+      ],
+      "support": 39,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-21",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "scc"
+        ]
+       ],
+       [
+        [
+         "AM",
+         "word",
+         "belimoserp"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "not_word",
+         "u.s."
+        ]
+       ]
+      ],
+      "support": 8,
+      "purity": 0.5
+     },
+     {
+      "id": "LALL-22",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "scc"
+        ]
+       ],
+       [
+        [
+         "AM",
+         "word",
+         "belimoserp"
+        ]
+       ],
+       [
+        [
+         "BX",
+         "word",
+         "u.s."
+        ]
+       ]
+      ],
+      "support": 8,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-23",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "not_word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "word",
+         "scc"
+        ]
+       ]
+      ],
+      "support": 8,
+      "purity": 0.5
+     },
+     {
+      "id": "LALL-24",
+      "gl": "356205",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "not_word",
+         "us"
+        ]
+       ]
+      ],
+      "support": 9,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-25",
+      "gl": "353500",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "word",
+         "us"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "cadj"
+        ]
+       ]
+      ],
+      "support": 10,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-26",
+      "gl": "353500",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "not_word",
+         "oshkosh"
+        ]
+       ],
+       [
+        [
+         "BP",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "P",
+         "word",
+         "no"
+        ]
+       ],
+       [
+        [
+         "CD",
+         "word",
+         "us"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "word",
+         "cadj"
+        ]
+       ]
+      ],
+      "support": 6,
+      "purity": 0.833
+     },
+     {
+      "id": "LALL-27",
+      "gl": "369600",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "not_word",
+         "palmer"
+        ]
+       ],
+       [
+        [
+         "BS",
+         "word",
+         "oshkosh"
+        ]
+       ]
+      ],
+      "support": 53,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-28",
+      "gl": "369600",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "not_word",
+         "fc"
+        ]
+       ],
+       [
+        [
+         "BW",
+         "word",
+         "palmer"
+        ]
+       ]
+      ],
+      "support": 63,
+      "purity": 1.0
+     },
+     {
+      "id": "LALL-29",
+      "gl": "356200",
+      "when": [
+       [
+        [
+         "BX",
+         "word",
+         "belimo"
+        ]
+       ],
+       [
+        [
+         "AJ",
+         "word",
+         "fc"
+        ]
+       ]
+      ],
+      "support": 193,
+      "purity": 1.0
+     }
+    ]
+   }
+  }
+ },
+ "evaluation": {
+  "data": "23,929 Belimo UPS rows from tdx_src.tde_tracking (Jan-Feb 2026), GL masked; shipment-level rows rebuilt into UPS columns (P=dist_code, Q=status_info; AJ/AM/BW blank)",
+  "belimo": {
+   "always_353500": 0.8892,
+   "learned_belimo_db_cols": 0.9405,
+   "doc_v1_unmatched_to_353500": 0.9603,
+   "doc_v1_matched_only": {
+    "matched_rows": 2252,
+    "accuracy": 0.8068
+   }
+  },
+  "csi": {
+   "doc_v1_matched_only": {
+    "rows": 13716,
+    "matched": 3208,
+    "accuracy": 0.9199
+   }
+  },
+  "within_completed_file_by_shipment": {
+   "learned_belimo_db_cols": 0.9831,
+   "baseline": 0.9082
+  }
+ }
+}
