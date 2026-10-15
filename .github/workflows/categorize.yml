@@ -1,0 +1,80 @@
+name: Categorize charges
+
+# Manual only while this is being tested. Defaults to a sandbox schema, so a run never touches
+# the shared `analytics` schema. To run nightly later, add:
+#   schedule:
+#     - cron: "0 6 * * *"
+on:
+  workflow_dispatch:
+    inputs:
+      schema:
+        description: "Schema to write charge_mapping into (sandbox_* for testing)"
+        default: sandbox_ci
+        type: string
+      rebuild:
+        description: "Re-classify every label (--rebuild) instead of only new ones"
+        default: false
+        type: boolean
+      allow_shared:
+        description: "Required to write to the shared `analytics` schema"
+        default: false
+        type: boolean
+
+concurrency: categorize   # one run at a time: two jobs writing the same mapping would collide
+
+jobs:
+  categorize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Use the Supabase *pooler* connection string here: the direct db.<ref>.supabase.co host
+      # is IPv6-only and GitHub runners are IPv4.
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    steps:
+      - name: Guard the shared schema
+        if: ${{ inputs.schema == 'analytics' && !inputs.allow_shared }}
+        run: |
+          echo "Refusing to write to analytics without allow_shared=true" >&2
+          exit 1
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Tests (no database)
+        run: |
+          python eval/test_multilingual_rules.py
+          python eval/test_client_review.py
+          python -m pytest tests/test_rules.py tests/test_fallback.py -q
+
+      - name: Categorize labels
+        run: python jobs/charge_type.py --schema "${{ inputs.schema }}" ${{ inputs.rebuild && '--rebuild' || '' }}
+
+      - name: Build dashboard summary
+        run: python jobs/build_dashboard.py --schema "${{ inputs.schema }}"
+
+      - name: Labels still in Other / Uncategorized
+        run: |
+          python - <<'PY'
+          import os, re
+          from sqlalchemy import create_engine, text
+          url = os.environ["SUPABASE_DB_URL"]
+          url = "postgresql+psycopg2://" + url.split("://", 1)[1]
+          schema = "${{ inputs.schema }}"
+          assert re.fullmatch(r"[a-z_][a-z0-9_]*", schema)
+          with create_engine(url).connect() as c:
+              rows = c.execute(text(f"SELECT charge_type, charge_description, n_lines, total_value FROM {schema}.charge_review LIMIT 30")).fetchall()
+          print(f"{len(rows)} labels need review (top 30 by value):")
+          for r in rows:
+              print("  ", r)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: summary-${{ inputs.schema }}
+          path: site/summary.json

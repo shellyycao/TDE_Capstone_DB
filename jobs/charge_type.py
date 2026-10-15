@@ -5,6 +5,12 @@ Local replacement for the Glue job in charge.py. Classification logic is
 unchanged: rule_classify_row from src/taxonomy.py first, then a TF-IDF
 char_wb 3-5 gram fallback with SIMILARITY_THRESHOLD = 0.35.
 
+Precedence: client override seed (seeds/charge_mapping_overrides.csv, method 'client_review')
+> written rules (REVIEWED_LABELS, PRIORITY_OVERRIDES, TAXONOMY) > TF-IDF similarity. Seed rows
+are re-applied on every run, also to labels already in the mapping, so a one-line seed change
+takes effect without --rebuild. Lines of excluded carriers / clients (factoring lookups) are
+flagged is_excluded in analytics.charge_categorized and are not categorized or counted here.
+
 Incremental: reads aggregated (charge_type, charge_description) combinations
 from staging.charge and classifies only the ones not already in the mapping,
 appending them. Existing rows keep their category; only row_count /
@@ -42,16 +48,20 @@ from sqlalchemy import create_engine, text
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
+import overrides  # noqa: E402
 from taxonomy import CATCH_ALL, TAXONOMY, normalize, rule_classify_row  # noqa: E402
 from tfidf_fallback import SIMILARITY_THRESHOLD, TfidfFallback  # noqa: E402
 
-MIGRATION_SQL = REPO_ROOT / "supabase" / "migrations" / "20260929000000_analytics_charge_mapping.sql"
+MIGRATIONS = sorted((REPO_ROOT / "supabase" / "migrations").glob("*.sql"))
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument("--schema", default="analytics",
                     help="schema to write charge_mapping into (default: analytics, the shared one)")
 parser.add_argument("--rebuild", action="store_true",
                     help="re-classify every label and replace the whole mapping (default: only new labels)")
+parser.add_argument("--seed", type=Path, default=REPO_ROOT / "seeds" / "charge_mapping_overrides.csv",
+                    help="client override seed (default: seeds/charge_mapping_overrides.csv); "
+                         "point it at a header-only CSV to see what the rules alone would produce")
 parser.add_argument("--threshold", type=float, default=SIMILARITY_THRESHOLD,
                     help=f"minimum TF-IDF similarity to accept a fallback match (default: {SIMILARITY_THRESHOLD})")
 args = parser.parse_args()
@@ -76,7 +86,24 @@ if SCHEMA != "analytics":
     # Same DDL as the shared migration (all IF NOT EXISTS / OR REPLACE), just
     # retargeted at the sandbox schema. The shared schema is never re-created here.
     with engine.begin() as conn:
-        conn.exec_driver_sql(re.sub(r"\banalytics\b", SCHEMA, MIGRATION_SQL.read_text()))
+        # Replaying the migrations in order would make the first one's narrower views fail
+        # ("cannot drop columns from view") on every run after the first, so drop the views
+        # (never the table) and let the migrations re-create them.
+        conn.exec_driver_sql(f"DROP VIEW IF EXISTS {SCHEMA}.charge_categorized, {SCHEMA}.charge_review")
+        for migration in MIGRATIONS:
+            conn.exec_driver_sql(re.sub(r"\banalytics\b", SCHEMA, migration.read_text()))
+else:
+    # The shared schema is migrated by hand; fail early if the override columns are not there yet.
+    with engine.connect() as conn:
+        cols = {r[0] for r in conn.execute(text(
+            "SELECT column_name FROM information_schema.columns "
+            "WHERE table_schema = 'analytics' AND table_name = 'charge_mapping_review'"))}
+    if not cols:
+        sys.exit("analytics.charge_mapping_review does not exist: apply "
+                 "supabase/migrations/20261015000000_client_review_overrides.sql first")
+
+seed = overrides.load_seed(args.seed)
+print(f"Override seed: {len(seed)} rows ({seed['status'].value_counts().to_dict()})")
 
 # ---------------------------------------------------------------------------
 # Load unique (charge_type, charge_description) combinations, aggregated in SQL
@@ -137,10 +164,55 @@ def refresh_counts(conn):
     return len(known)
 
 
+def apply_seed_to_existing(conn):
+    """Re-apply the override seed to labels already in the mapping (incremental runs never
+    re-classify them). confirmed / client_assigned set the category; disputed keeps the mapping
+    and keeps its method; excluded keeps the mapping and becomes client_review. Status and
+    note live in charge_mapping_review (sync_review_table), not on the mapping."""
+    if args.rebuild:
+        return 0   # the mapping was just rebuilt with the seed applied
+    known = seed[[k in existing_keys for k in zip(seed["charge_type"], seed["label"])]]
+    for r in known.itertuples():
+        sets_category = r.status in overrides.SETS_CATEGORY
+        conn.execute(text(f"""
+            UPDATE {SCHEMA}.charge_mapping
+            SET major_category = CASE WHEN :sets THEN :category ELSE major_category END,
+                subcategory    = CASE WHEN :sets THEN :subcategory ELSE subcategory END,
+                method         = CASE WHEN :status = 'disputed' THEN method ELSE :cr END,
+                similarity     = CASE WHEN :sets THEN NULL ELSE similarity END,
+                updated_at = now()
+            WHERE charge_type = :ctype AND charge_description = :label
+        """), {"status": r.status, "sets": sets_category, "category": r.category,
+               "subcategory": r.subcategory, "cr": overrides.CLIENT_REVIEW, "ctype": r.charge_type, "label": r.label})
+    return len(known)
+
+
+def sync_review_table(conn):
+    """Make <schema>.charge_mapping_review equal to the seed (replace; the seed is the source of truth)."""
+    conn.execute(text(f"TRUNCATE {SCHEMA}.charge_mapping_review"))
+    review = seed.rename(columns={"label": "charge_description", "status": "review_status"})[
+        ["charge_type", "charge_description", "review_status", "note", "source", "reviewed_on"]]
+    review = review.assign(note=review["note"].replace("", None), reviewed_on=pd.to_datetime(review["reviewed_on"]).dt.date)
+    review.to_sql("charge_mapping_review", conn, schema=SCHEMA, if_exists="append", index=False)
+
+
+def report_unmatched_seed_rows(conn):
+    """Seed rows that match no label in the mapping after this run (expected: none)."""
+    mapped = set(map(tuple, pd.read_sql(
+        text(f"SELECT charge_type, charge_description FROM {SCHEMA}.charge_mapping"), conn).values))
+    missing = [k for k in zip(seed["charge_type"], seed["label"]) if k not in mapped]
+    print(f"Seed rows that matched no label: {len(missing)}")
+    for k in missing:
+        print(f"  {k}")
+
+
 if unique_labels.empty:
     with engine.begin() as conn:
+        n_overridden = apply_seed_to_existing(conn)
         n = refresh_counts(conn)
-    print(f"No new labels. Refreshed counts on {n:,} existing rows.")
+        sync_review_table(conn)
+        report_unmatched_seed_rows(conn)
+    print(f"No new labels. Refreshed counts on {n:,} existing rows, re-applied {n_overridden} seed rows.")
     sys.exit(0)
 
 n_major = len(TAXONOMY) + 1  # + catch-all
@@ -158,6 +230,10 @@ unique_labels["Major Category"] = [c[0] if c else None for c in classified]
 unique_labels["Subcategory"] = [c[1] if c else None for c in classified]
 unique_labels["Method"] = ["rule" if c else None for c in classified]
 unique_labels["similarity"] = float("nan")
+
+# Client overrides outrank the rules; confirmed / client_assigned labels are decided here and
+# skip TF-IDF below. disputed / excluded keep what the rules (or TF-IDF) decide.
+unique_labels, _ = overrides.apply_to_labels(unique_labels, seed)
 
 matched_rows = unique_labels.loc[unique_labels["Major Category"].notna(), "row_count"].sum()
 print(f"Rule-based coverage: {matched_rows / unique_labels['row_count'].sum() * 100:.1f}% of rows")
@@ -180,6 +256,8 @@ for idx, result in fallback_results.items():
         unique_labels.loc[idx, "Subcategory"] = sub
         unique_labels.loc[idx, "Method"] = "tfidf_fallback"
         unique_labels.loc[idx, "similarity"] = sim
+
+unique_labels = overrides.finalize_after_fallback(unique_labels)
 
 unique_labels["Major Category"] = unique_labels["Major Category"].fillna(CATCH_ALL[0])
 unique_labels["Subcategory"] = unique_labels["Subcategory"].fillna(CATCH_ALL[1])
@@ -210,9 +288,13 @@ if dupes.any():
     raise ValueError(f"{dupes.sum()} rows violate (charge_type, charge_description) uniqueness:\n{mapping[dupes]}")
 
 with engine.begin() as conn:
+    n_overridden = apply_seed_to_existing(conn)
     if args.rebuild:
         conn.execute(text(f"TRUNCATE {SCHEMA}.charge_mapping"))
     mapping.to_sql("charge_mapping", conn, schema=SCHEMA, if_exists="append", index=False)
     n_refreshed = refresh_counts(conn)
+    sync_review_table(conn)
+    report_unmatched_seed_rows(conn)
 verb = "Rebuilt with" if args.rebuild else "Appended"
-print(f"{verb} {len(mapping):,} rows in {SCHEMA}.charge_mapping; refreshed counts on {n_refreshed:,} existing rows")
+print(f"{verb} {len(mapping):,} rows in {SCHEMA}.charge_mapping; refreshed counts on {n_refreshed:,} existing rows"
+      f"; re-applied {n_overridden} seed rows to existing labels")

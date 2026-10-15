@@ -66,7 +66,7 @@ def test_stored_categories_exist_in_taxonomy(db):
 def test_method_matches_category(db):
     df = query(db, """
         SELECT charge_type, charge_description, major_category, method, similarity FROM analytics.charge_mapping
-        WHERE method NOT IN ('rule', 'tfidf_fallback', 'none')
+        WHERE method NOT IN ('rule', 'tfidf_fallback', 'none', 'client_review')
            OR (method = 'none') <> (major_category = :catch_all)
            OR (method = 'tfidf_fallback' AND similarity IS NULL)""", catch_all=CATCH_ALL[0])
     assert df.empty, show(df)
@@ -97,9 +97,10 @@ def test_rule_rows_still_match_current_rules(db):
 
 
 def test_no_label_left_behind_by_new_rules(db):
-    # Labels stored as fallback/uncategorized that a rule now catches.
+    # Labels stored as fallback/uncategorized that a rule now catches. client_review rows are
+    # skipped: the client's answer (seeds/charge_mapping_overrides.csv) outranks the rules.
     df = query(db, """SELECT charge_type, charge_description, method, subcategory
-                      FROM analytics.charge_mapping WHERE method <> 'rule'""")
+                      FROM analytics.charge_mapping WHERE method NOT IN ('rule', 'client_review')""")
     df["now"] = [rule_classify_row(t, d) for t, d in zip(df.charge_type, df.charge_description)]
     caught = df[df.now.notna()].assign(now=lambda d: [n[1] for n in d.now])
     assert caught.empty, f"{len(caught)} labels a rule would now categorize" + show(

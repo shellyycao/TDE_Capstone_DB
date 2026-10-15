@@ -75,9 +75,20 @@ FROM (
          CASE WHEN major_category = 'Unmapped' THEN :catch_sub   ELSE subcategory    END AS subcategory,
          charge_value
   FROM {SCHEMA}.charge_categorized
+  WHERE NOT is_excluded
 ) t
 GROUP BY major_category, subcategory
 ORDER BY major_category, total_value DESC
+""")
+
+# Lines left out of everything above (is_excluded, e.g. factoring lookups): reported separately
+# so the exclusion stays visible. They are flagged, not deleted -- raw data is untouched.
+EXCLUDED_QUERY = text(f"""
+SELECT exclude_reason, count(*) AS num_rows, coalesce(sum(charge_value), 0) AS total_value
+FROM {SCHEMA}.charge_categorized
+WHERE is_excluded
+GROUP BY exclude_reason
+ORDER BY exclude_reason
 """)
 
 ENTITY_QUERY = """
@@ -87,6 +98,7 @@ SELECT {entity} AS entity,
        coalesce(sum(c.charge_value), 0) AS total_value
 FROM {schema}.charge_categorized c
 LEFT JOIN staging.shipment s ON c.shipment_id = s.shipment_id
+WHERE NOT c.is_excluded
 GROUP BY 1, 2
 ORDER BY entity, total_value DESC
 """
@@ -110,6 +122,8 @@ print(f"Reading {SCHEMA}.charge_categorized")
 with engine.connect() as conn:
     print("Running major/subcategory summary query...")
     rows = conn.execute(QUERY, params).fetchall()
+
+    excluded_rows = conn.execute(EXCLUDED_QUERY).fetchall()
 
     print("Running per-company breakdown query...")
     company_rows = conn.execute(COMPANY_QUERY, params).fetchall()
@@ -181,6 +195,8 @@ all_carriers, top_carriers, rest_carriers = group_by_entity(carrier_rows, TOP_N_
 summary = {
     "generated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     "total_transactions": sum(c["row_count"] for c in categories),
+    "excluded": [{"reason": reason, "row_count": int(n), "total_value": round(float(v), 2)}
+                 for reason, n, v in excluded_rows],
     "categories": categories,
     "companies": top_companies,
     "other_companies_count": len(rest_companies),

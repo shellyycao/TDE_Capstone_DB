@@ -1,0 +1,162 @@
+category,charge_type,label,lines,review,should_be
+Fuel Surcharge,,Fuel Surcharge,88637,Right,
+Fuel Surcharge,,Shipping Charge Correction Fuel Surcharge,7067,Right,
+Fuel Surcharge,,Brandstof toeslag,4867,Right,
+Fuel Surcharge,,FUEL SURCHARGE,3803,Right,
+Fuel Surcharge,,UPS WorldEase Fuel Surcharge,1020,Right,
+Fuel Surcharge,,Chargeback Fuel Surcharge,932,Right,
+Fuel Surcharge,Accessorial,Address Correction Fuel Surcharge,349,Right,
+Fuel Surcharge,,Not Previously Billed Fuel Surcharge,313,Right,
+Fuel Surcharge,,Returns Fuel Surcharge,291,Right,
+Fuel Surcharge,,Address Correction Fuel Surcharge,278,Right,
+Fuel Surcharge,,Retourzendingen Brandstof toeslag,134,Right,
+Fuel Surcharge,,Fuel Surcharge Adjustment,61,Right,
+Fuel Surcharge,,FSC,51,Right,
+Fuel Surcharge,,BRANDSTOFTOESLAG,27,Right,
+Fuel Surcharge,Accessorial 3,FUEL SURCHARGE,24,Right,
+Line Haul / Base Transportation,,Transportation Charge,60188,Right,
+Line Haul / Base Transportation,Freight,Ground Commercial,21752,Right,
+Line Haul / Base Transportation,,TB Express Saver,2373,Right,
+Line Haul / Base Transportation,Freight,Ground Residential,1398,Right,
+Line Haul / Base Transportation,,WW Express Saver,1272,Right,
+Line Haul / Base Transportation,Freight,Ground Commercial Collect,1184,Right,
+Line Haul / Base Transportation,,UPS WorldEase Standard to Canada Shipment,1020,Right,
+Line Haul / Base Transportation,,WW Express,940,Right,
+Line Haul / Base Transportation,,Freight Charge,794,Right,
+Line Haul / Base Transportation,Freight,Next Day Air Commercial,785,Right,
+Line Haul / Base Transportation,Freight,PLT ACTUATORS 70,682,Right,
+Line Haul / Base Transportation,,Look Up Amount,493,Wrong,Other / not sure
+Line Haul / Base Transportation,,PREMIUM 12:00,336,Right,
+Line Haul / Base Transportation,,All in rate,331,Right,
+Line Haul / Base Transportation,Freight,PLT NMFC 051080-05 Faucets; Bibcocks; ... 70,319,Right,
+Line Haul / Base Transportation,Freight,2nd Day Air Commercial,307,Right,
+Line Haul / Base Transportation,Freight,Ground Hundredweight,304,Right,
+Line Haul / Base Transportation,Freight,Ground Commercial Third Party,291,Right,
+Line Haul / Base Transportation,Freight,Not Previously Billed Ground Commercial,273,Right,
+Line Haul / Base Transportation,,Worldwide Express,270,Right,
+Line Haul / Base Transportation,Freight,PLT ACTUATORS 51080-5 CLASS 70,261,Right,
+Line Haul / Base Transportation,Freight,Returns Ground,253,Right,
+Line Haul / Base Transportation,,Base,230,Right,
+Line Haul / Base Transportation,Freight,PLT MISC CLASS 70,188,Right,
+Line Haul / Base Transportation,Freight,Ground Residential Third Party,179,Right,
+Line Haul / Base Transportation,,Line Haul,169,Right,
+Line Haul / Base Transportation,Freight,Transportation Charges,163,Right,
+Line Haul / Base Transportation,,TB Express,149,Right,
+Line Haul / Base Transportation,,AIR FREIGHT,141,Right,
+Line Haul / Base Transportation,,Worldwide Saver,137,Right,
+Discounts,,Grace Discount,55222,Right,
+Discounts,,Performance Pricing,45574,Right,
+Discounts,,Discount,10614,Right,
+Discounts,Discount,XPO LOGISTICS DISCOUNT SAVES YOU,715,Right,
+Discounts,Discount,--> R&L'S DISCOUNT SAVES YOU ------ >,395,Right,
+Discounts,,Earned Discount,185,Right,
+Discounts,Discount,Discount...,58,Right,
+Discounts,Discount,Discount Allowed 85.00%,31,Right,
+Discounts,Discount,--> R&L'S DISCOUNT SAVES YOU ------- >,28,Right,
+Discounts,Discount,Discount Allowed 90.50%,25,Right,
+Discounts,Discount,Discount Allowed 87.00%,25,Right,
+Discounts,Discount,--> R&L'S DISCOUNT SAVES YOU,11,Right,
+Discounts,Discount,--> R&L'S DISCOUNT SAVES YOU ----- >,9,Right,
+Discounts,Discount,75.00% DISCOUNT,8,Right,
+Discounts,Discount,89.00% DISCOUNT,7,Right,
+Accessorial / Delivery Surcharge,,Demand Surcharge,5483,Right,
+Accessorial / Delivery Surcharge,,DAS Comm,5020,Right,
+Accessorial / Delivery Surcharge,,Surge Fee - Commercieel,4035,Right,
+Accessorial / Delivery Surcharge,,DEMAND SURCHARGE,3397,Right,
+Accessorial / Delivery Surcharge,,Delivery Area Surcharge,2276,Right,
+Accessorial / Delivery Surcharge,,Residential Surcharge,1841,Right,
+Accessorial / Delivery Surcharge,,Residential Delivery,1567,Right,
+Accessorial / Delivery Surcharge,,DAS Extended Comm,1029,Right,
+Accessorial / Delivery Surcharge,,Residential,991,Right,
+Accessorial / Delivery Surcharge,,Demand Surcharge - Residential,722,Right,
+Accessorial / Delivery Surcharge,,UPS WorldEase Surge Fee - Com,702,Right,
+Accessorial / Delivery Surcharge,,DAS Commercial,623,Right,
+Accessorial / Delivery Surcharge,,Surge Fee - Com,603,Right,
+Accessorial / Delivery Surcharge,Freight,Demand Surcharge - Commercial,576,Right,
+Accessorial / Delivery Surcharge,Freight,Address Correction Ground,565,Right,
+Accessorial / Delivery Surcharge,,Delivery Area Surcharge - Extended,481,Right,
+Accessorial / Delivery Surcharge,,Add'l Handling-Dimension,413,Right,
+Accessorial / Delivery Surcharge,,Saturday Delivery,326,Right,
+Accessorial / Delivery Surcharge,,Address Correction,318,Right,
+Accessorial / Delivery Surcharge,,Demand-Add'l Handling,317,Right,
+Accessorial / Delivery Surcharge,,DAS Residential,288,Right,
+Accessorial / Delivery Surcharge,,Driving Additional Miles,234,Right,
+Accessorial / Delivery Surcharge,,Add'l Handling-Weight,175,Right,
+Accessorial / Delivery Surcharge,,AHS - Dimensions,171,Right,
+Accessorial / Delivery Surcharge,,WAITING TIME @ TENDER,136,Right,
+Accessorial / Delivery Surcharge,,TOLL CHARGES,135,Right,
+Accessorial / Delivery Surcharge,Accessorial,CCS CALIFORNIA COMPLIANCE SURCHARGE,134,Right,
+Accessorial / Delivery Surcharge,,Toll,129,Right,
+Accessorial / Delivery Surcharge,,DAS Resi,120,Right,
+Accessorial / Delivery Surcharge,,DAS Remote Comm,113,Right,
+Accessorial / Delivery Surcharge,,Demand Surcharge Addl Handling,100,Right,
+Accessorial / Delivery Surcharge,,Addl. Handling weight,96,Right,
+Accessorial / Delivery Surcharge,,DAS Extended Commercial,92,Right,
+Accessorial / Delivery Surcharge,,Security Surcharge,92,Right,
+Accessorial / Delivery Surcharge,,Additional Handling - Length+Girth,89,Right,
+Accessorial / Delivery Surcharge,Accessorial,LIMITED ACCESS CHARGE,89,Right,
+Accessorial / Delivery Surcharge,,Shipping Charge Correction Additional Handling - Length+Girth,89,Right,
+Accessorial / Delivery Surcharge,,Residentieel,82,Right,
+Accessorial / Delivery Surcharge,,org. Terminal Handling-Forwarder - Greater of (Min,81,Right,
+Accessorial / Delivery Surcharge,,Adrescorrectie TB Express Saver,81,Right,
+Accessorial / Delivery Surcharge,Accessorial,DLG DEST LIFTGATE HAND-UNLOAD,80,Right,
+Accessorial / Delivery Surcharge,,ISS,76,Right,
+Accessorial / Delivery Surcharge,,SECURITY FEE,75,Right,
+Accessorial / Delivery Surcharge,,Surge Fee - Particulier,74,Right,
+Accessorial / Delivery Surcharge,,WAITING TIME @ PU,71,Right,
+Accessorial / Delivery Surcharge,,WAITING TIME,71,Right,
+Accessorial / Delivery Surcharge,,Wait Time (P),71,Right,
+Accessorial / Delivery Surcharge,,Residential Adjustment,71,Right,
+Accessorial / Delivery Surcharge,Accessorial,LIFTGATE DELIVERY,69,Right,
+Accessorial / Delivery Surcharge,,Retourzendingen Surge Fee - Commercieel,66,Right,
+Administrative & Service Fees,,PICKUP MILES ADDITIONAL,378,Wrong,
+Other / Uncategorized,,Service Charge,139,Assigned,Administrative & Service Fees
+Other / Uncategorized,,Early Surcharge,137,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Metro,59,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,PARKING FEES,28,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,SYMPHONY - VISIBILITY,23,Assigned,Administrative & Service Fees
+Other / Uncategorized,,Airline Transfer Fee,21,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,PACKING SUPPLIES,19,Assigned,Administrative & Service Fees
+Other / Uncategorized,,Origin Transfer Fee,18,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,Accessorial,DMS GOVT AIRPORT MINE GAS OIL DLVRY,18,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,BTF2,17,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,MOBILITY PACKAGE,16,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,T/C,15,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,Accessorial,NWCARBEA SURCHARGE,15,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Weekly Printer Service Fee,15,Assigned,Administrative & Service Fees
+Other / Uncategorized,,PHARMA CHECK FEE,14,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,WEEKLY PRINTER SERVICE FEE,13,Assigned,Administrative & Service Fees
+Other / Uncategorized,,ATRLINE PHARMA FEE,13,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Special Express Clearance,12,Assigned,Taxes & Customs
+Other / Uncategorized,,Dest. Administrative Handling,12,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,ADDL LINE FEE,12,Assigned,Taxes & Customs
+Other / Uncategorized,,Pharma check,11,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,PU AND HOLD,11,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Original Invoice Amount,10,Assigned,Line Haul / Base Transportation
+Other / Uncategorized,,Special DL,10,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,ADDITIONAL CLASSIFICATIONS,10,Assigned,Taxes & Customs
+Other / Uncategorized,,KA,9,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Waste disposal,9,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,DOC,9,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,ADDL INVOICE,9,Assigned,Taxes & Customs
+Other / Uncategorized,,w/C,9,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,TERMI NAL CHARGE,9,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Filler Only Pkg SM,8,Assigned,Administrative & Service Fees
+Other / Uncategorized,,Revalidation - Service Fee,8,Assigned,Administrative & Service Fees
+Other / Uncategorized,,RECOVER AND HOLD,8,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,Accessorial,GUARANTEED BY 5PM 000000|005000,8,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,FORWARDING FEES,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,ADDITIONAL INVOICES,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Special Services,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,DESTINATIONCHARGES,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,W&I FEE,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Fix time frame,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Terminal Fees,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,Accessorial,Destination Transfer Fee,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,DOCS,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,TONU,7,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,CHC,7,Assigned,Administrative & Service Fees
+Other / Uncategorized,,P/U,6,Assigned,Administrative & Service Fees
+Other / Uncategorized,,ELEVATED RISK,6,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,Accessorial,RDC REMOTE DELIVERY CHARGE Tier- 1,6,Assigned,Accessorial / Delivery Surcharge
+Other / Uncategorized,,Reclass,6,Assigned,Accessorial / Delivery Surcharge
