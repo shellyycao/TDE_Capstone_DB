@@ -1,8 +1,18 @@
--- Client review (2026-10-15): override columns on the mapping, and line-level exclusion.
--- Raw data is untouched: exclusion is a flag computed in the view, so it is visible and reversible.
+-- Client review (2026-10-15): review status per label, and line-level exclusion.
+-- charge_mapping itself is unchanged. Raw data is untouched: exclusion is a flag computed in
+-- the view, so it is visible and reversible.
 
-ALTER TABLE analytics.charge_mapping ADD COLUMN IF NOT EXISTS review_status text;  -- confirmed / client_assigned / disputed / excluded
-ALTER TABLE analytics.charge_mapping ADD COLUMN IF NOT EXISTS note          text;
+-- One row per label the client reviewed (the override seed, seeds/charge_mapping_overrides.csv);
+-- labels never reviewed have no row. jobs/charge_type.py re-syncs it from the seed on every run.
+CREATE TABLE IF NOT EXISTS analytics.charge_mapping_review (
+  charge_type        text NOT NULL DEFAULT '',
+  charge_description text NOT NULL DEFAULT '',
+  review_status      text NOT NULL,   -- confirmed / client_assigned / disputed / excluded
+  note               text,
+  source             text,
+  reviewed_on        date,
+  PRIMARY KEY (charge_type, charge_description)
+);
 
 -- is_excluded / exclude_reason: lines that are not shipping cost. Currently the factoring rate
 -- lookups (client answer, 2026-10-15): carrier "FACTORING RATE CHECK" or client "Factoring Look Up",
@@ -18,12 +28,15 @@ SELECT c.*,
        CASE WHEN upper(trim(s.carrier_name)) = 'FACTORING RATE CHECK'
               OR lower(trim(s.client_name))  = 'factoring look up'
             THEN 'factoring_lookup' END                               AS exclude_reason,
-       m.review_status,
-       m.note                                                         AS review_note
+       r.review_status,
+       r.note                                                         AS review_note
 FROM staging.charge c
 LEFT JOIN analytics.charge_mapping m
   ON  m.charge_type        = coalesce(c.charge_type, '')
   AND m.charge_description = coalesce(c.charge_description, '')
+LEFT JOIN analytics.charge_mapping_review r
+  ON  r.charge_type        = coalesce(c.charge_type, '')
+  AND r.charge_description = coalesce(c.charge_description, '')
 LEFT JOIN staging.shipment s ON s.shipment_id = c.shipment_id;
 
 -- Excluded lines are not part of the review queue.

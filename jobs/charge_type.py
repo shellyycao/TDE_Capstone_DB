@@ -97,9 +97,9 @@ else:
     with engine.connect() as conn:
         cols = {r[0] for r in conn.execute(text(
             "SELECT column_name FROM information_schema.columns "
-            "WHERE table_schema = 'analytics' AND table_name = 'charge_mapping'"))}
-    if not {"review_status", "note"} <= cols:
-        sys.exit("analytics.charge_mapping has no review_status / note columns: apply "
+            "WHERE table_schema = 'analytics' AND table_name = 'charge_mapping_review'"))}
+    if not cols:
+        sys.exit("analytics.charge_mapping_review does not exist: apply "
                  "supabase/migrations/20261015000000_client_review_overrides.sql first")
 
 seed = overrides.load_seed(args.seed)
@@ -167,7 +167,8 @@ def refresh_counts(conn):
 def apply_seed_to_existing(conn):
     """Re-apply the override seed to labels already in the mapping (incremental runs never
     re-classify them). confirmed / client_assigned set the category; disputed keeps the mapping
-    and only gets its status + note; excluded keeps the mapping and becomes client_review."""
+    and keeps its method; excluded keeps the mapping and becomes client_review. Status and
+    note live in charge_mapping_review (sync_review_table), not on the mapping."""
     if args.rebuild:
         return 0   # the mapping was just rebuilt with the seed applied
     known = seed[[k in existing_keys for k in zip(seed["charge_type"], seed["label"])]]
@@ -175,16 +176,24 @@ def apply_seed_to_existing(conn):
         sets_category = r.status in overrides.SETS_CATEGORY
         conn.execute(text(f"""
             UPDATE {SCHEMA}.charge_mapping
-            SET review_status = :status, note = NULLIF(:note, ''),
-                major_category = CASE WHEN :sets THEN :category ELSE major_category END,
+            SET major_category = CASE WHEN :sets THEN :category ELSE major_category END,
                 subcategory    = CASE WHEN :sets THEN :subcategory ELSE subcategory END,
                 method         = CASE WHEN :status = 'disputed' THEN method ELSE :cr END,
                 similarity     = CASE WHEN :sets THEN NULL ELSE similarity END,
                 updated_at = now()
             WHERE charge_type = :ctype AND charge_description = :label
-        """), {"status": r.status, "note": r.note, "sets": sets_category, "category": r.category,
+        """), {"status": r.status, "sets": sets_category, "category": r.category,
                "subcategory": r.subcategory, "cr": overrides.CLIENT_REVIEW, "ctype": r.charge_type, "label": r.label})
     return len(known)
+
+
+def sync_review_table(conn):
+    """Make <schema>.charge_mapping_review equal to the seed (replace; the seed is the source of truth)."""
+    conn.execute(text(f"TRUNCATE {SCHEMA}.charge_mapping_review"))
+    review = seed.rename(columns={"label": "charge_description", "status": "review_status"})[
+        ["charge_type", "charge_description", "review_status", "note", "source", "reviewed_on"]]
+    review = review.assign(note=review["note"].replace("", None), reviewed_on=pd.to_datetime(review["reviewed_on"]).dt.date)
+    review.to_sql("charge_mapping_review", conn, schema=SCHEMA, if_exists="append", index=False)
 
 
 def report_unmatched_seed_rows(conn):
@@ -201,6 +210,7 @@ if unique_labels.empty:
     with engine.begin() as conn:
         n_overridden = apply_seed_to_existing(conn)
         n = refresh_counts(conn)
+        sync_review_table(conn)
         report_unmatched_seed_rows(conn)
     print(f"No new labels. Refreshed counts on {n:,} existing rows, re-applied {n_overridden} seed rows.")
     sys.exit(0)
@@ -270,7 +280,7 @@ mapping = unique_labels.rename(columns={
     "Method": "method",
 })[[
     "charge_type", "charge_description", "major_category", "subcategory",
-    "method", "similarity", "row_count", "total_value", "review_status", "note",
+    "method", "similarity", "row_count", "total_value",
 ]]
 
 dupes = mapping.duplicated(["charge_type", "charge_description"], keep=False)
@@ -283,6 +293,7 @@ with engine.begin() as conn:
         conn.execute(text(f"TRUNCATE {SCHEMA}.charge_mapping"))
     mapping.to_sql("charge_mapping", conn, schema=SCHEMA, if_exists="append", index=False)
     n_refreshed = refresh_counts(conn)
+    sync_review_table(conn)
     report_unmatched_seed_rows(conn)
 verb = "Rebuilt with" if args.rebuild else "Appended"
 print(f"{verb} {len(mapping):,} rows in {SCHEMA}.charge_mapping; refreshed counts on {n_refreshed:,} existing rows"
