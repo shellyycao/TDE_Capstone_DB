@@ -1,10 +1,11 @@
 name: Categorize charges
 
-# Manual only while this is being tested. Defaults to a sandbox schema, so a run never touches
-# the shared `analytics` schema. To run nightly later, add:
-#   schedule:
-#     - cron: "0 6 * * *"
+# Runs nightly and on demand. Both default to the sandbox schema, so a run never touches the
+# shared `analytics` schema unless someone starts it by hand with schema=analytics and
+# allow_shared=true. (Scheduled runs have no inputs, hence the `|| default` fallbacks below.)
 on:
+  schedule:
+    - cron: "0 6 * * *"   # 06:00 UTC daily
   workflow_dispatch:
     inputs:
       schema:
@@ -27,12 +28,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
+      SCHEMA: ${{ inputs.schema || 'sandbox_ci' }}
+      REBUILD: ${{ inputs.rebuild && '--rebuild' || '' }}
       # Use the Supabase *pooler* connection string here: the direct db.<ref>.supabase.co host
       # is IPv6-only and GitHub runners are IPv4.
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
     steps:
       - name: Guard the shared schema
-        if: ${{ inputs.schema == 'analytics' && !inputs.allow_shared }}
+        if: ${{ env.SCHEMA == 'analytics' && !inputs.allow_shared }}
         run: |
           echo "Refusing to write to analytics without allow_shared=true" >&2
           exit 1
@@ -53,10 +56,10 @@ jobs:
           python -m pytest tests/test_rules.py tests/test_fallback.py -q
 
       - name: Categorize labels
-        run: python jobs/charge_type.py --schema "${{ inputs.schema }}" ${{ inputs.rebuild && '--rebuild' || '' }}
+        run: python jobs/charge_type.py --schema "$SCHEMA" $REBUILD
 
       - name: Build dashboard summary
-        run: python jobs/build_dashboard.py --schema "${{ inputs.schema }}"
+        run: python jobs/build_dashboard.py --schema "$SCHEMA"
 
       - name: Labels still in Other / Uncategorized
         run: |
@@ -65,7 +68,7 @@ jobs:
           from sqlalchemy import create_engine, text
           url = os.environ["SUPABASE_DB_URL"]
           url = "postgresql+psycopg2://" + url.split("://", 1)[1]
-          schema = "${{ inputs.schema }}"
+          schema = os.environ["SCHEMA"]
           assert re.fullmatch(r"[a-z_][a-z0-9_]*", schema)
           with create_engine(url).connect() as c:
               rows = c.execute(text(f"SELECT charge_type, charge_description, n_lines, total_value FROM {schema}.charge_review LIMIT 30")).fetchall()
@@ -76,5 +79,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: summary-${{ inputs.schema }}
+          name: summary-${{ env.SCHEMA }}
           path: site/summary.json
