@@ -50,6 +50,7 @@ jobs:
         run: |
           python eval/test_multilingual_rules.py
           python eval/test_client_review.py
+          python -m pytest tests/test_rules.py tests/test_fallback.py -q
 
       - name: Categorize labels
         run: python jobs/charge_type.py --schema "${{ inputs.schema }}" ${{ inputs.rebuild && '--rebuild' || '' }}

@@ -322,6 +322,13 @@ FOREIGN_PATTERNS = {
 
 CATCH_ALL = ("Other / Uncategorized", "Unclassified")
 
+# Subcategories with no patterns on purpose: only the client override seed
+# (seeds/charge_mapping_overrides.csv) can put a label here. See src/overrides.py.
+SEED_ONLY_SUBCATEGORIES = {
+    ("Accessorial / Delivery Surcharge", "Other Accessorial / Special Service"),
+    ("Administrative & Service Fees", "General Service Fee"),
+}
+
 # Labels a person reviewed and assigned by hand, keyed by the exact charge description
 # (lower-cased). Checked before every pattern, and never part of the TF-IDF corpus, so a
 # decision here affects only that label. Add to this table rather than writing a regex
@@ -435,9 +442,7 @@ TFIDF_EXCLUDE = {
     # One known label so far; as a two-word reference doc ("customer solution") it
     # fuzzy-matched "Custody Fee" on the shared "cust". Rules only until it has more.
     ("Administrative & Service Fees", "Customer Service / Resolution Fee"),
-    # No patterns -- assigned by the client override seed only.
-    ("Accessorial / Delivery Surcharge", "Other Accessorial / Special Service"),
-    ("Administrative & Service Fees", "General Service Fee"),
+    *SEED_ONLY_SUBCATEGORIES,   # no patterns -- nothing to match against
 }
 
 

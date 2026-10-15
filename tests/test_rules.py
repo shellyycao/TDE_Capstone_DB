@@ -9,7 +9,7 @@ import pytest
 
 from taxonomy import (
     CATCH_ALL, FALLBACK_RULES, FOREIGN_PATTERNS, PRIORITY_OVERRIDES, REVIEWED_LABELS,
-    TAXONOMY, TFIDF_EXCLUDE, normalize, rule_classify_row,
+    SEED_ONLY_SUBCATEGORIES, TAXONOMY, TFIDF_EXCLUDE, normalize, rule_classify_row,
 )
 
 ALL_SUBCATS = {(major, sub) for major, subs in TAXONOMY.items() for sub in subs}
@@ -48,7 +48,9 @@ def test_patterns_are_lowercase():
 
 
 def test_no_empty_subcategory():
-    empty = [(m, s) for m, subs in TAXONOMY.items() for s, pats in subs.items() if not pats]
+    # Seed-only subcategories (client-assigned, see SEED_ONLY_SUBCATEGORIES) have no patterns on purpose.
+    empty = [(m, s) for m, subs in TAXONOMY.items() for s, pats in subs.items()
+             if not pats and (m, s) not in SEED_ONLY_SUBCATEGORIES]
     assert not empty
 
 
